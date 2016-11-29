@@ -1,4 +1,9 @@
 .todo-subtasks {
-    flex-basis: 60%;
-    text-align: right;
+  width: 100%;
+}
+
+.todo-subtasks__subtasks {
+  overflow: auto;
+  max-height: 500px;
+  margin-top: 20px;
 }

@@ -1,14 +1,34 @@
 .todo-category {
+  position: relative;
   display: flex;
   justify-content: space-between;
   background-color: #efecec;
   font-size: 14px;
-  padding: 5px 10px;
+  padding: 5px 10px 5px 25px;
   border-radius: 3px;
   border: 1px solid #ccc;
 }
 
-.todo-category--subcategory {
+.todo-category.is-active:before {
+  position: absolute;
+  left: 10px;
+  color: #337ab7;
+  content: '\e802';
+  font-family: "fontello";
+}
+
+.todo-category__content-left {
+  position: relative;
+  padding-left: 10px;
+}
+
+.todo-category__content-left {
+
+}
+
+.todo-category__subcategories {
+  flex-shrink: 0;
+  flex-grow: 1;
   padding-left: 5px;
 }
 

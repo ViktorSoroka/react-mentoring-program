@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import './MainSearch.css';
 
+
 export default class MainSearch extends Component {
   constructor(props) {
     super(props);

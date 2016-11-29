@@ -8,16 +8,16 @@ import './Categories.css';
 
 export default class Categories extends Component {
   render() {
-    const { categories, activeCategoryId } = this.props;
+    const { categories, activeCategory } = this.props;
 
     return (
       <div className="todo-categories">
         <Search />
-        <div>
+        <div className="todo-categories__categories">
           {categories.map(category => {
             return <Category key={category.id}
                              category={category}
-                             isActive={activeCategoryId === category.id}/>
+                             activeCategoryId={activeCategory.id}/>
           })}
         </div>
       </div>

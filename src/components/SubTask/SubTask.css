@@ -1,0 +1,23 @@
+.todo-subtask {
+  display: flex;
+  justify-content: space-between;
+  background-color: #efecec;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+.todo-subtask__title {
+  padding-left: 10px;
+}
+
+.todo-subtask__btn-edit {
+  border: 0;
+  margin-left: 5px;
+  padding: 0;
+  box-shadow: 0 0 0 1px #7e7e7e;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+}

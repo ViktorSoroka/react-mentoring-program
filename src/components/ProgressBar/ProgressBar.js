@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import './ProgressBar.css';
 
+
 export default class ProgressBar extends Component {
   render() {
     return (

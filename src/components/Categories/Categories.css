@@ -1,4 +1,9 @@
 .todo-categories {
-    flex-basis: 30%;
-    text-align: left;
+  width: 100%;
+}
+
+.todo-categories__categories {
+  max-height: 500px;
+  overflow: auto;
+  margin-top: 20px;
 }
