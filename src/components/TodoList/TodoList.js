@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Page        from '../Page/Page';
 import Header      from '../Header/Header';
 import MainSearch  from '../MainSearch/MainSearch';
+import Search      from '../Search/Search';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import Categories  from '../Categories/Categories';
 import SubTasks    from '../SubTasks/SubTasks';
@@ -11,7 +12,7 @@ import SubTasks    from '../SubTasks/SubTasks';
 import { getTodoCategories } from '../../api/tododb';
 
 
-class App extends Component {
+export default class TodoList extends Component {
   constructor(props) {
     super(props);
 
@@ -40,11 +41,16 @@ class App extends Component {
         <ProgressBar width="70%"/>
       </Header>);
 
-    const asideContent = <Categories categories={categories} activeCategory={activeCategory}/>;
-    const mainContent  = <SubTasks subtasks={subtasks}/>;
+    let asideContent = <div>
+      <Search placeholder={"Enter category title"}/>
+      <Categories categories={categories} activeCategory={activeCategory}/>
+    </div>;
+
+    const mainContent = <div>
+      <Search placeholder={"Enter subtask title"}/>
+      <SubTasks subtasks={subtasks}/>
+    </div>;
 
     return <Page {...{ header, asideContent, mainContent }}/>;
   }
 }
-
-export default App;

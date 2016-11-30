@@ -1,11 +1,12 @@
 import React    from 'react';
 import ReactDOM from 'react-dom';
-import App      from './components/TodoApp/TodoApp';
+import TodoList from './components/TodoList/TodoList';
+// import TodoItem from './components/TodoItem/TodoItem';
 
 import './index.css';
 
 
 ReactDOM.render(
-  <App />,
+  <TodoList />,
   document.getElementById('root')
 );

@@ -17,15 +17,6 @@
   font-family: "fontello";
 }
 
-.todo-category__content-left {
-  position: relative;
-  padding-left: 10px;
-}
-
-.todo-category__content-left {
-
-}
-
 .todo-category__subcategories {
   flex-shrink: 0;
   flex-grow: 1;

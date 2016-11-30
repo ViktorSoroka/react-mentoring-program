@@ -1,8 +1,5 @@
 .todo-categories {
   width: 100%;
-}
-
-.todo-categories__categories {
   max-height: 500px;
   overflow: auto;
   margin-top: 20px;

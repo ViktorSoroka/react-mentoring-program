@@ -1,0 +1,24 @@
+.todo-edit-subtask-form {
+  width: 100%;
+}
+
+.todo-edit-subtask-form__fieldset {
+  padding: 0 0 10px 0;
+  border: none;
+  text-align: left;
+}
+
+.todo-edit-subtask-form__fieldset--align-right {
+  text-align: right;
+}
+
+.todo-edit-subtask-form__textarea {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.todo-edit-subtask-form__btn {
+  background: #fff;
+  margin-left: 5px;
+  border-radius: 3px;
+}
