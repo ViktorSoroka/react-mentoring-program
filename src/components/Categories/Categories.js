@@ -11,11 +11,11 @@ export default class Categories extends Component {
 
     return (
       <div className="todo-categories">
-          {categories.map(category => {
-            return <Category key={category.id}
-                             category={category}
-                             activeCategoryId={activeCategory.id}/>
-          })}
+        {categories.map(category => {
+          return <Category key={category.id}
+                           category={category}
+                           activeCategoryId={activeCategory.id}/>
+        })}
       </div>
     );
   }

@@ -11,7 +11,7 @@ export default class SubTasks extends Component {
 
     return (
       <div className="todo-subtasks">
-        {subtasks.map(subtask => {
+        {subtasks && subtasks.map(subtask => {
           return <SubTask key={subtask.id}
                           subtask={subtask}/>
         })}

@@ -6,7 +6,7 @@ import EditSubTaskForm from '../EditSubTaskForm/EditSubTaskForm';
 import Categories      from '../Categories/Categories';
 
 
-import { getTodoCategories } from '../../api/tododb';
+import { getTodoCategories } from '../../utils/tododb';
 
 
 export default class TodoList extends Component {

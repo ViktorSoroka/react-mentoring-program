@@ -8,31 +8,31 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 import Categories  from '../Categories/Categories';
 import SubTasks    from '../SubTasks/SubTasks';
 
-
-import { getTodoCategories } from '../../api/tododb';
-
+import { fetchTodos } from '../../actions/TodoActions';
+import TodoStore from '../../stores/TodosStore';
 
 export default class TodoList extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      categories    : [],
-      activeCategory: null
-    };
+    this.state = TodoStore.getTodoState();
   }
 
+  _onChange = () => {
+    this.setState(TodoStore.getTodoState());
+  };
+
   componentDidMount() {
-    getTodoCategories().then(result => {
-      this.setState({
-        categories    : result,
-        activeCategory: result[0],
-      });
-    });
+    TodoStore.addChangeListener(this._onChange);
+    fetchTodos();
+  }
+
+  componentWillUnmount() {
+    TodoStore.removeChangeListener(this._onChange);
   }
 
   render() {
-    const { categories, activeCategory } = this.state;
+    const { todos, activeCategory } = this.state;
 
     const subtasks = activeCategory ? activeCategory.subtasks : [];
     const header   = (
@@ -43,7 +43,7 @@ export default class TodoList extends Component {
 
     let asideContent = <div>
       <Search placeholder={"Enter category title"}/>
-      <Categories categories={categories} activeCategory={activeCategory}/>
+      <Categories categories={todos} activeCategory={activeCategory}/>
     </div>;
 
     const mainContent = <div>
