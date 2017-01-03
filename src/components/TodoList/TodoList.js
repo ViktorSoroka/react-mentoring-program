@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import Page        from '../Page/Page';
-import Header      from '../Header/Header';
-import MainSearch  from '../MainSearch/MainSearch';
-import Search      from '../Search/Search';
-import ProgressBar from '../ProgressBar/ProgressBar';
-import Categories  from '../Categories/Categories';
-import SubTasks    from '../SubTasks/SubTasks';
+import Page          from '../Page/Page';
+import Header        from '../Header/Header';
+import MainSearch    from '../MainSearch/MainSearch';
+import Search        from '../Search/Search';
+import ProgressBar   from '../ProgressBar/ProgressBar';
+import CategoryTrees from '../CategoryTrees/CategoryTrees';
+import SubTasks      from '../SubTasks/SubTasks';
 
 import { fetchTodos } from '../../actions/TodoActions';
 import TodoStore from '../../stores/TodosStore';
@@ -43,7 +43,7 @@ export default class TodoList extends Component {
 
     let asideContent = <div>
       <Search placeholder={"Enter category title"}/>
-      <Categories categories={todos} activeCategory={activeCategory}/>
+      <CategoryTrees categories={todos} activeCategory={activeCategory}/>
     </div>;
 
     const mainContent = <div>

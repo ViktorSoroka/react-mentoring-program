@@ -1,26 +1,17 @@
 .todo-category {
-  position: relative;
   display: flex;
   justify-content: space-between;
-  background-color: #efecec;
+  padding: 5px 10px 5px 10px;
   font-size: 14px;
-  padding: 5px 10px 5px 25px;
+  color: #776e6e;
+  background-color: #efecec;
   border-radius: 3px;
   border: 1px solid #ccc;
 }
 
-.todo-category.is-active:before {
-  position: absolute;
-  left: 10px;
+.todo-category.is-active {
+  background-color: #bdb3b3;
   color: #337ab7;
-  content: '\e802';
-  font-family: "fontello";
-}
-
-.todo-category__subcategories {
-  flex-shrink: 0;
-  flex-grow: 1;
-  padding-left: 5px;
 }
 
 .toto-category__btn-edit,

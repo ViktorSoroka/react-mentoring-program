@@ -28,7 +28,7 @@ const TodoStore = createStore({
 dispather.register(action => {
   switch (action.actionType) {
     case TodoActionTypes.ACTIVE_CATEGORY_SET: {
-      _activeCategory = _todos[action.data];
+      _activeCategory = action.data;
       TodoStore.emitChange();
       break;
     }

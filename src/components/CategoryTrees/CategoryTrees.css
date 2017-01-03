@@ -1,6 +1,4 @@
-.todo-subtasks {
-  display: flex;
-  flex-direction: column;
+.todo-category-trees {
   width: 100%;
   height: 500px;
   margin-top: 20px;
@@ -9,8 +7,4 @@
   box-sizing: border-box;
   overflow: auto;
   background-color: #fff;
-}
-
-.todo-subtasks__no-results {
-  margin: auto;
 }
