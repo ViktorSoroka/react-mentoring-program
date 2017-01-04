@@ -1,11 +1,24 @@
 import dispather from '../dispatcher';
 import TodoActionTypes from '../constants/TodoActionTypes';
+import uuidV4 from 'uuid/v4';
+
 
 import { createStore } from '../utils/StoreUtils';
 
+
+const {
+        START_FETCH_TODOS,
+        FETCH_TODOS_SUCCEED,
+        SET_ACTIVE_CATEGORY,
+        ADD_CATEGORY,
+        EDIT_CATEGORY,
+        DELETE_CATEGORY,
+        ADD_TASK
+      } = TodoActionTypes;
+
 let _todos             = [];
+let _activeCategory    = {};
 let _isFetchTodosError = false;
-let _activeCategory  = {};
 
 const TodoStore = createStore({
   getTodos() {
@@ -25,21 +38,64 @@ const TodoStore = createStore({
 });
 
 
-dispather.register(action => {
-  switch (action.actionType) {
-    case TodoActionTypes.ACTIVE_CATEGORY_SET: {
-      _activeCategory = action.data;
+function createCategory(title, parentId) {
+  return {
+    id           : uuidV4(),
+    title,
+    parentId
+  };
+}
+
+function createTask(title) {
+  return {
+    id           : uuidV4(),
+    title,
+    isCompleted: false
+  };
+}
+
+
+dispather.register(({ actionType, data }) => {
+  switch (actionType) {
+    case SET_ACTIVE_CATEGORY: {
+      _activeCategory = data;
       TodoStore.emitChange();
       break;
     }
-    case TodoActionTypes.FETCH_TODOS_STARTED: {
+    case START_FETCH_TODOS: {
       _isFetchTodosError = false;
       TodoStore.emitChange();
       break;
     }
-    case TodoActionTypes.FETCH_TODOS_SUCCEED: {
-      _todos             = action.data;
+    case FETCH_TODOS_SUCCEED: {
+      _todos             = data;
       _isFetchTodosError = false;
+      TodoStore.emitChange();
+      break;
+    }
+    case ADD_CATEGORY: {
+      const newCategory = createCategory(data.title, data.parentId);
+      _todos.unshift(newCategory);
+      _activeCategory = newCategory;
+      TodoStore.emitChange();
+      break;
+    }
+    case EDIT_CATEGORY: {
+      TodoStore.emitChange();
+      break;
+    }
+    case DELETE_CATEGORY: {
+      TodoStore.emitChange();
+      break;
+    }
+    case ADD_TASK: {
+      const targetCategory = data.targetCategory || _activeCategory;
+
+      if (!targetCategory.subtasks) {
+        targetCategory.subtasks = [];
+      }
+
+      targetCategory.subtasks.unshift(createTask(data.title));
       TodoStore.emitChange();
       break;
     }

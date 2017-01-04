@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import './Category.css';
 
 
+const isCategoryHasSubCategories = ({ subcategories = [] } = {}) => subcategories.length;
+
 export default class Category extends Component {
   render() {
     const {
@@ -16,7 +18,7 @@ export default class Category extends Component {
       <div className={"todo-category" + (isCategoryActive ? " is-active" : "")}
            onClick={() => setActiveCategory(category)}>
         <div>
-          {category.subcategories ? <input type="checkbox" onChange={() => toggleChildrenVisibility()} name="toggle-category"/> : null}
+          {isCategoryHasSubCategories(category) ? <input type="checkbox" onChange={() => toggleChildrenVisibility()} name="toggle-category"/> : null}
           <strong className="todo-category__title">{category.title}</strong>
           <button className="toto-category__btn-edit"><span className="icon-edit"></span></button>
         </div>

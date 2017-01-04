@@ -8,7 +8,11 @@ import ProgressBar   from '../ProgressBar/ProgressBar';
 import CategoryTrees from '../CategoryTrees/CategoryTrees';
 import SubTasks      from '../SubTasks/SubTasks';
 
-import { fetchTodos } from '../../actions/TodoActions';
+import {
+  fetchTodos,
+  addCategory,
+  addTask
+} from '../../actions/TodoActions';
 import TodoStore from '../../stores/TodosStore';
 
 export default class TodoList extends Component {
@@ -42,12 +46,14 @@ export default class TodoList extends Component {
       </Header>);
 
     let asideContent = <div>
-      <Search placeholder={"Enter category title"}/>
+      <Search handleSubmit={addCategory}
+              placeholder={"Enter category title"}/>
       <CategoryTrees categories={todos} activeCategory={activeCategory}/>
     </div>;
 
     const mainContent = <div>
-      <Search placeholder={"Enter subtask title"}/>
+      <Search handleSubmit={addTask}
+              placeholder={"Enter subtask title"}/>
       <SubTasks subtasks={subtasks}/>
     </div>;
 

@@ -5,6 +5,8 @@ import Category from '../Category/Category';
 import './CategoryTree.css';
 
 
+const isCategoryHasSubCategories = ({ subcategories = [] } = {}) => subcategories.length;
+
 export default class CategoryWithSubCategories extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +40,7 @@ export default class CategoryWithSubCategories extends Component {
                   isCategoryActive={isCategoryActive}
                   setActiveCategory={this.setActiveCategory}
                   toggleChildrenVisibility={this.toggleChildrenVisibility}/>
-        {(category.subcategories && this.state.showChildren) ?
+        {(isCategoryHasSubCategories(category) && this.state.showChildren) ?
           <div className="todo-category-tree__subcategories">
             {category.subcategories.map(category => this.renderCategory(category, activeCategoryId))}
           </div>
