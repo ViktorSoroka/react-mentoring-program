@@ -3,42 +3,51 @@ import React, { Component } from 'react';
 import Page            from '../Page/Page';
 import Header          from '../Header/Header';
 import EditSubTaskForm from '../EditSubTaskForm/EditSubTaskForm';
-import Categories      from '../Categories/Categories';
+import CategoryTrees   from '../CategoryTrees/CategoryTrees';
 
+import { updateTask } from '../../actions/TodoActions';
 
-import { getTodoCategories } from '../../utils/tododb';
-
+import TodoStore from '../../stores/TodosStore';
 
 export default class TodoList extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      categories    : [],
-      activeCategory: null,
-      activeTodoItem: null
-    };
-  }
+  state = TodoStore.getTodoState();
 
   componentDidMount() {
-    getTodoCategories().then(result => {
-      this.setState({
-        categories    : result,
-        activeCategory: result[0],
-        activeSubTask : result[0].subtasks[0]
-      });
-    });
+    const activeTaskId = this.props.params.id;
+
+    TodoStore.addChangeListener(this._onChange);
+
+    if (activeTaskId && !TodoStore.getActiveTask(activeTaskId)) {
+      return this.props.router.replace('/');
+    }
   }
 
+  componentWillUnmount() {
+    TodoStore.removeChangeListener(this._onChange);
+  }
+
+  onFormSubmit = data => {
+    updateTask(data);
+  };
+
   render() {
-    const { categories, activeCategory, activeSubTask } = this.state;
+    const { todos } = this.state;
 
-    const header = <Header title={activeSubTask ? activeSubTask.title : null}/>;
+    const activeTaskId = this.props.params.id;
+    const activeTask   = TodoStore.getActiveTask(activeTaskId) || {};
 
-    let asideContent = <Categories categories={categories} activeCategory={activeCategory}/>;
+    const header = <Header title={activeTask ? activeTask.title : null}/>;
 
-    const mainContent = activeSubTask ? <EditSubTaskForm subtask={activeSubTask}/> : null;
+    let asideContent = <CategoryTrees categories={todos}
+                                      activeCategoryId={activeTask.categoryId}
+                                      activeSubtask={activeTask}/>;
+
+    const mainContent = activeTask ? <EditSubTaskForm subtask={activeTask} onFormSubmit={this.onFormSubmit}/> : null;
 
     return <Page {...{ header, asideContent, mainContent }}/>;
   }
+
+  _onChange = () => {
+    this.setState(TodoStore.getTodoState());
+  };
 }

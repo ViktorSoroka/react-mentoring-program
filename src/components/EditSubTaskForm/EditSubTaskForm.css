@@ -22,3 +22,9 @@
   margin-left: 5px;
   border-radius: 3px;
 }
+
+.todo-edit-subtask-form__error-msg {
+  padding-left: 5px;
+  color: #f00;
+  font-size: 12px;
+}

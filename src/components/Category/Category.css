@@ -9,9 +9,14 @@
   border: 1px solid #ccc;
 }
 
-.todo-category.is-active {
-  background-color: #bdb3b3;
+.todo-category__link {
+  color: #000;
+  text-decoration: none;
+}
+
+.todo-category__link.is-active {
   color: #337ab7;
+  font-weight: 600;
 }
 
 .toto-category__btn-edit,

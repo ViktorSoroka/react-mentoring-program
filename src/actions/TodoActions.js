@@ -1,37 +1,16 @@
 import Dispatcher from '../dispatcher';
-import { getDbOnce } from '../utils/StorageUtils';
 import TodoActionTypes from '../constants/TodoActionTypes';
 
+
 const {
-        START_FETCH_TODOS,
-        FETCH_TODOS_SUCCEED,
-        SET_ACTIVE_CATEGORY,
         ADD_CATEGORY,
         EDIT_CATEGORY,
         DELETE_CATEGORY,
-        ADD_TASK
+        ADD_NESTED_CATEGORY,
+        ADD_TASK,
+        UPDATE_TASK,
+        UPDATE_TASK_COMPLETION
       } = TodoActionTypes;
-
-
-export function setActiveCategory(id) {
-  Dispatcher.dispatch({
-    actionType: SET_ACTIVE_CATEGORY,
-    data      : id
-  });
-}
-
-export function startFetchingTodos() {
-  Dispatcher.dispatch({
-    actionType: START_FETCH_TODOS
-  });
-}
-
-export function updateTodosState(data) {
-  Dispatcher.dispatch({
-    actionType: FETCH_TODOS_SUCCEED,
-    data
-  });
-}
 
 export function addCategory(title, parentId = null) {
   Dispatcher.dispatch({
@@ -43,34 +22,64 @@ export function addCategory(title, parentId = null) {
   });
 }
 
-export function editCategory(id) {
+export function addNestedCategory(parentCategory, title) {
   Dispatcher.dispatch({
-    actionType: EDIT_CATEGORY,
-    data      : id
-  });
-}
-
-export function deleteCategory(id) {
-  Dispatcher.dispatch({
-    actionType: DELETE_CATEGORY,
-    data      : id
-  });
-}
-
-export function addTask(title, targetCategory = null) {
-  Dispatcher.dispatch({
-    actionType: ADD_TASK,
+    actionType: ADD_NESTED_CATEGORY,
     data      : {
       title,
-      targetCategory
+      parentCategory
     }
   });
 }
 
-export function fetchTodos() {
-  startFetchingTodos();
+export function editCategory(category, title) {
+  Dispatcher.dispatch({
+    actionType: EDIT_CATEGORY,
+    data      : {
+      title,
+      category
+    }
+  });
+}
 
-  getDbOnce(data => {
-    updateTodosState(data);
+export function deleteCategory(category, parentCategory) {
+  Dispatcher.dispatch({
+    actionType: DELETE_CATEGORY,
+    data      : {
+      category,
+      parentCategory
+    }
+  });
+}
+
+export function addTask(title, payload) {
+  Dispatcher.dispatch({
+    actionType: ADD_TASK,
+    data      : {
+      title,
+      targetCategoryId: payload.targetCategoryId
+    }
+  });
+}
+
+export function updateTask({ subtaskId, title, isCompleted, description }) {
+  Dispatcher.dispatch({
+    actionType: UPDATE_TASK,
+    data      : {
+      subtaskId,
+      title,
+      isCompleted,
+      description
+    }
+  });
+}
+
+export function updateTaskCompletion({ subtaskId, isCompleted }) {
+  Dispatcher.dispatch({
+    actionType: UPDATE_TASK_COMPLETION,
+    data      : {
+      subtaskId,
+      isCompleted,
+    }
   });
 }

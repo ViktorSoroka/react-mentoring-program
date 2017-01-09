@@ -7,7 +7,7 @@ export default class ProgressBar extends Component {
   render() {
     return (
       <div className="todo-progress-bar">
-        <div className="todo-progress-bar__progress" style={{ width: this.props.width }}></div>
+        <div className="todo-progress-bar__progress" style={{ width: `${this.props.width}%` }}></div>
       </div>
     );
   }

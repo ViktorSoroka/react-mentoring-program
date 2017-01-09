@@ -1,49 +1,52 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import './MainSearch.css';
 
 
 export default class MainSearch extends Component {
-  constructor(props) {
-    super(props);
+  onCheckboxChange = e => {
+    this.updateQuery({
+      showDone: e.target.checked
+    });
+  };
 
-    this.state = {
-      searchValue: '',
-      showActive : false
-    };
+  updateQuery(data) {
+    const { router }   = this.context;
+    const { location } = router;
+
+    router.push({
+      ...location,
+      query: {
+        ...location.query,
+        ...data
+      }
+    });
   }
-
-  onSearchValueChange = e => {
-    this.setState({ searchValue: e.target.value });
-  };
-
-  onCheckboxChange = () => {
-    this.setState({ showActive: !this.state.showActive });
-  };
 
   onSubmit = e => {
     e.preventDefault();
 
-    console.log('submit');
+    this.updateQuery({
+      taskname: this.searchInput.value
+    });
   };
 
   render() {
-    const { searchValue, showActive } = this.state;
-
     return (
       <div className="todo-main-search">
         <form className="todo-main-search-form" onSubmit={this.onSubmit}>
           <label className="todo-main-search-form__label">
             <input type="checkbox"
-                   value={showActive}
-                   onChange={this.onCheckboxChange}/>Show active
-          </label>
+                   onChange={this.onCheckboxChange}/>Show done only</label>
           <input type="search"
                  placeholder="search"
-                 value={searchValue}
-                 onChange={this.onSearchValueChange}/>
+                 ref={input => this.searchInput = input}/>
         </form>
       </div>
     );
   }
 }
+
+MainSearch.contextTypes = {
+  router: PropTypes.object
+};

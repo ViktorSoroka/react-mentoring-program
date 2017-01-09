@@ -9,54 +9,89 @@ import CategoryTrees from '../CategoryTrees/CategoryTrees';
 import SubTasks      from '../SubTasks/SubTasks';
 
 import {
-  fetchTodos,
   addCategory,
   addTask
 } from '../../actions/TodoActions';
+
 import TodoStore from '../../stores/TodosStore';
 
+
 export default class TodoList extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = TodoStore.getTodoState();
-  }
-
-  _onChange = () => {
-    this.setState(TodoStore.getTodoState());
-  };
+  state = TodoStore.getTodoState();
 
   componentDidMount() {
+    const activeCategoryId = this.props.params.id;
+
     TodoStore.addChangeListener(this._onChange);
-    fetchTodos();
+
+    if (activeCategoryId && !TodoStore.getActiveCategory(activeCategoryId)) {
+      return this.props.router.replace('/');
+    }
   }
 
   componentWillUnmount() {
     TodoStore.removeChangeListener(this._onChange);
   }
 
-  render() {
-    const { todos, activeCategory } = this.state;
+  getSubtasks(subtasks, activeCategory) {
+    let { router: { location: { query: { showDone, taskname } } } } = this.props;
 
-    const subtasks = activeCategory ? activeCategory.subtasks : [];
-    const header   = (
+    showDone = showDone && JSON.parse(showDone);
+
+    if (!activeCategory) {
+      return null;
+    }
+
+    return activeCategory.subtasks.reduce((res, subtaskId) => {
+      const subtask = subtasks[subtaskId];
+
+      if ((taskname && !(new RegExp(`^${taskname}`)).test(subtask.title)) ||
+        (showDone && !subtask.isCompleted)) return res;
+
+      res.push(subtask);
+
+      return res;
+    }, []);
+  }
+
+  calculateProgressWidth(tasks) {
+    if (!tasks) return 0;
+    if (!tasks.length) return 100;
+
+    return Math.round(tasks.reduce((completedTasks, task) => task.isCompleted ? completedTasks + 1 : completedTasks,
+        0) / tasks.length * 100);
+  }
+
+  render() {
+    const { todos, subtasks } = this.state;
+    const activeCategoryId    = this.props.params.id;
+
+    const categoryTasks = this.getSubtasks(subtasks, TodoStore.getActiveCategory(activeCategoryId));
+    const progressWidth = this.calculateProgressWidth(categoryTasks);
+
+    const header = (
       <Header title="To-Do List">
         <MainSearch />
-        <ProgressBar width="70%"/>
+        <ProgressBar width={progressWidth}/>
       </Header>);
 
-    let asideContent = <div>
+    const asideContent = <div>
       <Search handleSubmit={addCategory}
               placeholder={"Enter category title"}/>
-      <CategoryTrees categories={todos} activeCategory={activeCategory}/>
+      <CategoryTrees categories={todos} activeCategoryId={activeCategoryId}/>
     </div>;
 
     const mainContent = <div>
       <Search handleSubmit={addTask}
+              payload={{ targetCategoryId: activeCategoryId }}
               placeholder={"Enter subtask title"}/>
-      <SubTasks subtasks={subtasks}/>
+      <SubTasks subtasks={categoryTasks}/>
     </div>;
 
     return <Page {...{ header, asideContent, mainContent }}/>;
   }
+
+  _onChange = () => {
+    this.setState(TodoStore.getTodoState());
+  };
 }

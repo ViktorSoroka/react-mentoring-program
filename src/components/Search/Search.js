@@ -19,7 +19,7 @@ export default class Search extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    this.props.handleSubmit(this.state.searchValue);
+    this.props.handleSubmit(this.state.searchValue, this.props.payload);
     this.setState({ searchValue: '' });
   };
 

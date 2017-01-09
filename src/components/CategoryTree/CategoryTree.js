@@ -8,17 +8,7 @@ import './CategoryTree.css';
 const isCategoryHasSubCategories = ({ subcategories = [] } = {}) => subcategories.length;
 
 export default class CategoryWithSubCategories extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      showChildren: true
-    }
-  }
-
-  static isCategoryActive(categoryId, activeCategoryId) {
-    return categoryId === activeCategoryId;
-  }
+  state = { showChildren: true };
 
   toggleChildrenVisibility = () => {
     this.setState({
@@ -26,32 +16,28 @@ export default class CategoryWithSubCategories extends Component {
     });
   };
 
-  setActiveCategory = category => {
-    this.props.setActiveCategory(category);
-  };
+  render() {
+    const { category } = this.props;
 
-  renderCategory = (category, activeCategoryId) => {
-    const isCategoryActive = this.constructor.isCategoryActive(category.id, activeCategoryId);
+    const newCategoryProps = {
+      toggleChildrenVisibility: this.toggleChildrenVisibility
+    };
 
     return (
       <div className="todo-category-tree"
            key={category.id}>
-        <Category category={category}
-                  isCategoryActive={isCategoryActive}
-                  setActiveCategory={this.setActiveCategory}
-                  toggleChildrenVisibility={this.toggleChildrenVisibility}/>
+        <Category {...this.props} {...newCategoryProps}/>
         {(isCategoryHasSubCategories(category) && this.state.showChildren) ?
           <div className="todo-category-tree__subcategories">
-            {category.subcategories.map(category => this.renderCategory(category, activeCategoryId))}
+            {category.subcategories.map((childCategory, index) =>
+              <CategoryWithSubCategories {...this.props}
+                                         key={childCategory.id}
+                                         parentCategory={category}
+                                         category={childCategory}/>
+            )}
           </div>
           : null}
       </div>
     );
-  };
-
-  render() {
-    const { category, activeCategoryId } = this.props;
-
-    return this.renderCategory(category, activeCategoryId);
   }
 }
