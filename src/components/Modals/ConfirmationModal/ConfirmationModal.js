@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import withModal from '../../../helpers/withModal';
 
 import '../Modal.css';
 
-class ModalLayout extends React.Component {
+class ConfirmationModal extends React.Component {
   render() {
     const {
             isVisible,
@@ -30,4 +30,13 @@ class ModalLayout extends React.Component {
   }
 }
 
-export default withModal(ModalLayout);
+//Todo: check types
+ConfirmationModal.propTypes = {
+  isVisible : PropTypes.bool,
+  modalTitle: PropTypes.string,
+  onConfirm : PropTypes.func,
+  onCancel  : PropTypes.func,
+  data      : PropTypes.object
+};
+
+export default withModal(ConfirmationModal);

@@ -9,8 +9,10 @@ const {
         ADD_NESTED_CATEGORY,
         ADD_TASK,
         UPDATE_TASK,
-        UPDATE_TASK_COMPLETION
+        UPDATE_TASK_COMPLETION,
+        CHANGE_SUBTASK_PARENT
       } = TodoActionTypes;
+
 
 export function addCategory(title, parentId = null) {
   Dispatcher.dispatch({
@@ -22,32 +24,31 @@ export function addCategory(title, parentId = null) {
   });
 }
 
-export function addNestedCategory(parentCategory, title) {
+export function addNestedCategory(parentId, title) {
   Dispatcher.dispatch({
     actionType: ADD_NESTED_CATEGORY,
     data      : {
       title,
-      parentCategory
+      parentId
     }
   });
 }
 
-export function editCategory(category, title) {
+export function editCategory(categoryId, title) {
   Dispatcher.dispatch({
     actionType: EDIT_CATEGORY,
     data      : {
       title,
-      category
+      categoryId
     }
   });
 }
 
-export function deleteCategory(category, parentCategory) {
+export function deleteCategory(categoryId) {
   Dispatcher.dispatch({
     actionType: DELETE_CATEGORY,
     data      : {
-      category,
-      parentCategory
+      categoryId
     }
   });
 }
@@ -70,6 +71,17 @@ export function updateTask({ subtaskId, title, isCompleted, description }) {
       title,
       isCompleted,
       description
+    }
+  });
+}
+
+export function changeSubtaskParent({ currentCategoryId, targetCategoryId, subtaskId }) {
+  Dispatcher.dispatch({
+    actionType: CHANGE_SUBTASK_PARENT,
+    data      : {
+      currentCategoryId,
+      targetCategoryId,
+      subtaskId
     }
   });
 }

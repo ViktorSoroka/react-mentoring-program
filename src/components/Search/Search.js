@@ -1,16 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import './Search.css';
 
 
 export default class Search extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      searchValue: ''
-    };
-  }
+  state = { searchValue: '' };
 
   onSearchValueChange = e => {
     this.setState({ searchValue: e.target.value });
@@ -38,4 +32,9 @@ export default class Search extends Component {
       </div>
     );
   }
-}
+};
+
+Search.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  placeholder : PropTypes.string.isRequired,
+};

@@ -57,9 +57,11 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-edit:before { content: '\e800'; } /* '' */
-.icon-trash-empty:before { content: '\e801'; } /* '' */
-.icon-ok:before { content: '\e802'; } /* '' */
+.icon-left-open:before { content: '\e800'; } /* '' */
+.icon-right-open:before { content: '\e801'; } /* '' */
+.icon-edit:before { content: '\e802'; } /* '' */
+.icon-trash-empty:before { content: '\e803'; } /* '' */
+.icon-reply:before { content: '\f112'; } /* '' */
 .icon-plus-squared-alt:before { content: '\f196'; } /* '' */
 
 body {

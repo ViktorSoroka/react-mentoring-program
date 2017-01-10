@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import './CategoryForm.css';
 
@@ -40,7 +40,8 @@ export default class CategoryForm extends Component {
           {invalid ? <span className="category-form__error-msg">Please enter valid category title.</span> : null }
           <div className="category-form-btn-wrap">
             <button className="category-form-btn"
-                    type="sumbit">Submit</button>
+                    type="sumbit">Submit
+            </button>
             {this.props.modalForm ?
               <button className="category-form-btn"
                       type="button"
@@ -51,3 +52,9 @@ export default class CategoryForm extends Component {
     );
   }
 }
+
+CategoryForm.propTypes = {
+  modalForm   : PropTypes.bool,
+  onConfirm   : PropTypes.func,
+  onFormSubmit: PropTypes.func
+};

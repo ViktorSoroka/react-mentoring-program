@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import Page          from '../Page/Page';
 import Header        from '../Header/Header';
@@ -16,17 +16,23 @@ import {
 import TodoStore from '../../stores/TodosStore';
 
 
+const checkActiveCategoryPresence = (activeCategoryId, router) => {
+  if (activeCategoryId && !TodoStore.getCategory(activeCategoryId)) {
+    return router.replace('/');
+  }
+};
+
 export default class TodoList extends Component {
   state = TodoStore.getTodoState();
 
   componentDidMount() {
-    const activeCategoryId = this.props.params.id;
-
     TodoStore.addChangeListener(this._onChange);
 
-    if (activeCategoryId && !TodoStore.getActiveCategory(activeCategoryId)) {
-      return this.props.router.replace('/');
-    }
+    checkActiveCategoryPresence(this.props.params.id, this.props.router);
+  }
+
+  componentWillUpdate() {
+    checkActiveCategoryPresence(this.props.params.id, this.props.router);
   }
 
   componentWillUnmount() {
@@ -63,10 +69,10 @@ export default class TodoList extends Component {
   }
 
   render() {
-    const { todos, subtasks } = this.state;
+    const { categories, subtasks } = this.state;
     const activeCategoryId    = this.props.params.id;
 
-    const categoryTasks = this.getSubtasks(subtasks, TodoStore.getActiveCategory(activeCategoryId));
+    const categoryTasks = this.getSubtasks(subtasks, TodoStore.getCategory(activeCategoryId));
     const progressWidth = this.calculateProgressWidth(categoryTasks);
 
     const header = (
@@ -78,7 +84,10 @@ export default class TodoList extends Component {
     const asideContent = <div>
       <Search handleSubmit={addCategory}
               placeholder={"Enter category title"}/>
-      <CategoryTrees categories={todos} activeCategoryId={activeCategoryId}/>
+      <CategoryTrees categories={categories}
+                     activeCategoryId={activeCategoryId}
+                     getCategory={TodoStore.getCategory}
+      />
     </div>;
 
     const mainContent = <div>
@@ -95,3 +104,7 @@ export default class TodoList extends Component {
     this.setState(TodoStore.getTodoState());
   };
 }
+
+TodoList.propTypes = {
+  params: PropTypes.object.isRequired
+};

@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 
 import './ProgressBar.css';
 
 
-export default class ProgressBar extends Component {
-  render() {
-    return (
-      <div className="todo-progress-bar">
-        <div className="todo-progress-bar__progress" style={{ width: `${this.props.width}%` }}></div>
-      </div>
-    );
-  }
+export default function ProgressBar({ width }) {
+  return (
+    <div className="todo-progress-bar">
+      <div className="todo-progress-bar__progress" style={{ width: `${width}%` }}></div>
+    </div>
+  );
 }
+
+ProgressBar.propTypes = {
+  width: PropTypes.number.isRequired
+};

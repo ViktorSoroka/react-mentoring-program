@@ -12,24 +12,23 @@ const {
         ADD_NESTED_CATEGORY,
         ADD_TASK,
         UPDATE_TASK,
-        UPDATE_TASK_COMPLETION
+        UPDATE_TASK_COMPLETION,
+        CHANGE_SUBTASK_PARENT
       } = TodoActionTypes;
 
 
-const _categories = {};
-
-let _todos = [];
-let _tasks = {};
+let _categories = {};
+let _tasks      = {};
 
 
 const TodoStore = createStore({
   getTodoState() {
     return {
-      todos   : _todos,
-      subtasks: _tasks
+      subtasks  : _tasks,
+      categories: _categories
     }
   },
-  getActiveCategory(categoryId) {
+  getCategory(categoryId) {
     return _categories[categoryId];
   },
   getActiveTask(taskId) {
@@ -41,6 +40,7 @@ const TodoStore = createStore({
 function createCategory(title, parentId) {
   return {
     id           : uuidV4(),
+    dateAdded    : new Date().valueOf(),
     title,
     parentId,
     subtasks     : [],
@@ -58,41 +58,67 @@ function createTask(title, categoryId) {
   };
 }
 
+function deleteCategory(categoryId) {
+  debugger;
+  const category = _categories[categoryId];
+
+  if (category.subcategories.length) {
+    category.subcategories.forEach(deleteCategory);
+  }
+
+  category.subtasks.forEach(taskId => {
+    delete _tasks[taskId];
+  });
+
+  delete _categories[categoryId];
+}
+
 
 dispather.register(({ actionType, data }) => {
   switch (actionType) { // eslint-disable-line default-case
     case ADD_CATEGORY: {
-      const newCategory = createCategory(data.title, data.parentId);
-
       if (!data.title) return;
 
-      _categories[newCategory.id] = newCategory;
-      _todos.unshift(newCategory);
-      break;
-    }
+      const newCategory = createCategory(data.title, data.parentId);
 
-    case ADD_NESTED_CATEGORY: {
-      const newCategory = createCategory(data.title, data.parentCategory.id);
+      _categories = {
+        ..._categories,
+        [newCategory.id]: newCategory
+      };
 
-      _categories[newCategory.id] = newCategory;
-      data.parentCategory.subcategories.unshift(newCategory);
       break;
     }
 
     case EDIT_CATEGORY: {
-      data.category.title = data.title;
+      const category = _categories[data.categoryId];
+
+      _categories = {
+        ..._categories,
+        [data.categoryId]: {
+          ...category,
+          title: data.title
+        }
+      };
+
+      break;
+    }
+
+    case ADD_NESTED_CATEGORY: {
+      const parentCategory = _categories[data.parentId];
+      const newCategory    = createCategory(data.title, data.parentId);
+
+      _categories[newCategory.id] = newCategory;
+      _categories[data.parentId]  = {
+        ...parentCategory,
+        subcategories: [newCategory.id, ...parentCategory.subcategories]
+      };
+
       break;
     }
 
     case DELETE_CATEGORY: {
-      const holder = data.parentCategory && data.parentCategory.subcategories ? data.parentCategory.subcategories : _todos;
+      deleteCategory(data.categoryId);
 
-      _categories[data.category.id].subtasks.forEach(taskId => {
-        delete _tasks[taskId];
-      });
-      delete _categories[data.category.id];
-
-      holder.splice(holder.indexOf(data.category), 1);
       break;
     }
 
@@ -100,37 +126,69 @@ dispather.register(({ actionType, data }) => {
       if (!data.targetCategoryId || !_categories[data.targetCategoryId] || !data.title) return;
 
       const targetCategory = _categories[data.targetCategoryId];
-
-      const newTask = createTask(data.title, targetCategory.id);
+      const newTask        = createTask(data.title, targetCategory.id);
 
       _tasks[newTask.id] = newTask;
-      targetCategory.subtasks.unshift(newTask.id);
+
+      _categories[targetCategory.id] = {
+        ...targetCategory,
+        subtasks: [newTask.id, ...targetCategory.subtasks]
+      };
+
       break;
     }
 
     case UPDATE_TASK: {
       const { title, description, isCompleted, subtaskId } = data;
 
-      const subtask = _tasks[subtaskId];
+      const task = _tasks[subtaskId];
 
       _tasks[subtaskId] = {
-        ...subtask,
+        ...task,
         title,
         description,
         isCompleted
       };
+
       break;
     }
 
     case UPDATE_TASK_COMPLETION: {
       const { isCompleted, subtaskId } = data;
 
-      const subtask = _tasks[subtaskId];
+      const task = _tasks[subtaskId];
 
       _tasks[subtaskId] = {
-        ...subtask,
+        ...task,
         isCompleted
       };
+
+      break;
+    }
+
+    case CHANGE_SUBTASK_PARENT: {
+      const currentCategory = _categories[data.currentCategoryId];
+      const clonedSubtasks  = [...currentCategory.subtasks];
+      const targetCategory  = _categories[data.targetCategoryId];
+      const task            = _tasks[data.subtaskId];
+
+      clonedSubtasks.splice(clonedSubtasks.indexOf(data.subtaskId), 1);
+
+      _categories[data.currentCategoryId] = {
+        ...currentCategory,
+        subtasks: clonedSubtasks
+      };
+
+      _categories[data.targetCategoryId] = {
+        ...targetCategory,
+        subtasks: [data.subtaskId, ...targetCategory.subtasks]
+      };
+
+      _tasks[data.subtaskId] = {
+        ...task,
+        categoryId: data.targetCategoryId
+      };
+
       break;
     }
   }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import { Link }  from 'react-router';
 
@@ -32,3 +32,11 @@ export default class SubTask extends Component {
     );
   }
 }
+
+SubTask.propTypes = {
+  subtask          : PropTypes.shape({
+    id   : PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired
+  }),
+  onCompletedChange: PropTypes.func.isRequired,
+};

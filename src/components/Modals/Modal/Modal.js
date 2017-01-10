@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import withModal from '../../../helpers/withModal';
 
@@ -31,5 +31,14 @@ class ModalLayout extends React.Component {
       ) : <div />;
   }
 }
+
+ModalLayout.propTypes = {
+  isVisible : PropTypes.bool.isRequired,
+  modalTitle: PropTypes.string.isRequired,
+  onConfirm : PropTypes.func.isRequired,
+  onCancel  : PropTypes.func.isRequired,
+  children  : PropTypes.node.isRequired,
+  data      : PropTypes.object
+};
 
 export default withModal(ModalLayout);

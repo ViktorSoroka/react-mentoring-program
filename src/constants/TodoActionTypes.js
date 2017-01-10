@@ -8,4 +8,5 @@ export default keyMirror({
   ADD_TASK              : null,
   UPDATE_TASK           : null,
   UPDATE_TASK_COMPLETION: null,
+  CHANGE_SUBTASK_PARENT : null,
 });

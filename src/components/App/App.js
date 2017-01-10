@@ -1,7 +1,11 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 
-export default class App extends Component {
-  render() {
-    return <div>{this.props.children}</div>;
-  }
-}
+export default function App({ children }) {
+  return (
+    <div>{children}</div>
+  );
+};
+
+App.propTypes = {
+  children: PropTypes.node.isRequired
+};

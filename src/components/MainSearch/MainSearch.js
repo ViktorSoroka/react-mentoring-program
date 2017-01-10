@@ -45,7 +45,7 @@ export default class MainSearch extends Component {
       </div>
     );
   }
-}
+};
 
 MainSearch.contextTypes = {
   router: PropTypes.object

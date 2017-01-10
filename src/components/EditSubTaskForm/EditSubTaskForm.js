@@ -31,8 +31,6 @@ export default class EditSubTaskForm extends Component {
 
     const { invalid } = this.state;
 
-    console.log(this.props.subtask);
-
     return (
       <form className="todo-edit-subtask-form" onSubmit={this.onSubmit}>
         <fieldset className="todo-edit-subtask-form__fieldset todo-edit-subtask-form__fieldset--align-right">
@@ -61,5 +59,10 @@ export default class EditSubTaskForm extends Component {
 }
 
 EditSubTaskForm.contextTypes = {
-  router  : PropTypes.object
+  router: PropTypes.object
+};
+
+EditSubTaskForm.propTypes = {
+  subtask     : PropTypes.object.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
 };

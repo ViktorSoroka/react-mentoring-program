@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import './Page.css';
 
 
-export default ({ header, asideContent, mainContent }) => {
+export default function Page({ header, asideContent, mainContent }) {
   return (
     <div className="todo">
       <header className="todo-header">{header}</header>
@@ -15,4 +15,10 @@ export default ({ header, asideContent, mainContent }) => {
       </div>
     </div>
   );
+};
+
+Page.propTypes = {
+  header      : PropTypes.node.isRequired,
+  asideContent: PropTypes.node.isRequired,
+  mainContent : PropTypes.node.isRequired
 };
