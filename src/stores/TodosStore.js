@@ -59,7 +59,6 @@ function createTask(title, categoryId) {
 }
 
 function deleteCategory(categoryId) {
-  debugger;
   const category = _categories[categoryId];
 
   if (category.subcategories.length) {
@@ -69,6 +68,12 @@ function deleteCategory(categoryId) {
   category.subtasks.forEach(taskId => {
     delete _tasks[taskId];
   });
+
+  if(_categories[category.parentId]) {
+    const parentSubCategoriesList = _categories[category.parentId].subcategories;
+
+    parentSubCategoriesList.splice(parentSubCategoriesList.indexOf(category.parentId, 1));
+  }
 
   delete _categories[categoryId];
 }
