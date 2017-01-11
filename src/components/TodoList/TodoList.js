@@ -8,35 +8,31 @@ import ProgressBar   from '../ProgressBar/ProgressBar';
 import CategoryTrees from '../CategoryTrees/CategoryTrees';
 import SubTasks      from '../SubTasks/SubTasks';
 
+import { connect } from 'react-redux';
+
 import {
   addCategory,
   addTask
 } from '../../actions/TodoActions';
 
-import TodoStore from '../../stores/TodosStore';
 
-
-const checkActiveCategoryPresence = (activeCategoryId, router) => {
-  if (activeCategoryId && !TodoStore.getCategory(activeCategoryId)) {
-    return router.replace('/');
-  }
-};
-
-export default class TodoList extends Component {
-  state = TodoStore.getTodoState();
-
+class TodoList extends Component {
   componentDidMount() {
-    TodoStore.addChangeListener(this._onChange);
-
-    checkActiveCategoryPresence(this.props.params.id, this.props.router);
+    this.checkActiveCategoryPresence(this.props.params.id, this.props.router);
   }
 
   componentWillUpdate() {
-    checkActiveCategoryPresence(this.props.params.id, this.props.router);
+    this.checkActiveCategoryPresence(this.props.params.id, this.props.router);
   }
 
-  componentWillUnmount() {
-    TodoStore.removeChangeListener(this._onChange);
+  getCategory = categoryId => {
+    return this.props.categories[categoryId];
+  };
+
+  checkActiveCategoryPresence(activeCategoryId, router) {
+    if (activeCategoryId && !this.getCategory(activeCategoryId)) {
+      return router.replace('/');
+    }
   }
 
   getSubtasks(subtasks, activeCategory) {
@@ -69,10 +65,10 @@ export default class TodoList extends Component {
   }
 
   render() {
-    const { categories, subtasks } = this.state;
-    const activeCategoryId    = this.props.params.id;
+    const { categories, subtasks, addCategory, addTask } = this.props;
+    const activeCategoryId                               = this.props.params.id;
 
-    const categoryTasks = this.getSubtasks(subtasks, TodoStore.getCategory(activeCategoryId));
+    const categoryTasks = this.getSubtasks(subtasks, this.getCategory(activeCategoryId));
     const progressWidth = this.calculateProgressWidth(categoryTasks);
 
     const header = (
@@ -86,7 +82,7 @@ export default class TodoList extends Component {
               placeholder={"Enter category title"}/>
       <CategoryTrees categories={categories}
                      activeCategoryId={activeCategoryId}
-                     getCategory={TodoStore.getCategory}
+                     getCategory={this.getCategory}
       />
     </div>;
 
@@ -99,12 +95,23 @@ export default class TodoList extends Component {
 
     return <Page {...{ header, asideContent, mainContent }}/>;
   }
-
-  _onChange = () => {
-    this.setState(TodoStore.getTodoState());
-  };
 }
 
 TodoList.propTypes = {
   params: PropTypes.object.isRequired
 };
+
+const mapStateToProps = state => ({
+  categories: state.categories,
+  subtasks  : state.subtasks
+});
+
+const mapDispatchToProps = {
+  addCategory,
+  addTask
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList);

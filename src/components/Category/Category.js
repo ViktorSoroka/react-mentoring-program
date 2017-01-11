@@ -5,6 +5,8 @@ import Modal             from '../Modals/Modal/Modal';
 import CategoryForm      from '../CategoryForm/CategoryForm';
 import { Link }          from 'react-router';
 
+import { connect } from 'react-redux';
+
 import {
   deleteCategory,
   addNestedCategory,
@@ -17,9 +19,9 @@ import './Category.css';
 
 const isCategoryHasSubCategories = ({ subcategories = [] } = {}) => subcategories.length;
 
-export default class Category extends Component {
+class Category extends Component {
   onCategoryRemoval = () => {
-    const { category } = this.props;
+    const { category, deleteCategory } = this.props;
 
     this.confirmationDialog.show({
       modalTitle: `Are you sure want to remove ${category.title}?`,
@@ -28,7 +30,7 @@ export default class Category extends Component {
   };
 
   onNestedCategoryAdd = () => {
-    const { category } = this.props;
+    const { category, addNestedCategory } = this.props;
 
     this.categoryFormDialog.show({
       modalTitle: `Write title for new category!`,
@@ -37,7 +39,7 @@ export default class Category extends Component {
   };
 
   onCategoryEdit = () => {
-    const { category } = this.props;
+    const { category, editCategory } = this.props;
 
     this.categoryFormDialog.show({
       modalTitle: `Type new category title for selected category!`,
@@ -47,7 +49,7 @@ export default class Category extends Component {
   };
 
   onChangeSubtaskParent = () => {
-    const { activeCategoryId, activeSubtask, category }  = this.props;
+    const { activeCategoryId, activeSubtask, category, changeSubtaskParent }  = this.props;
 
     changeSubtaskParent({
       currentCategoryId: activeCategoryId,
@@ -106,7 +108,7 @@ export default class Category extends Component {
       </div>
     );
   }
-};
+}
 
 Category.propTypes = {
   category                : PropTypes.object.isRequired,
@@ -115,3 +117,15 @@ Category.propTypes = {
   parentCategory          : PropTypes.object,
   activeCategoryId        : PropTypes.string
 };
+
+const mapDispatchToProps = {
+  deleteCategory,
+  addNestedCategory,
+  editCategory,
+  changeSubtaskParent,
+};
+
+export default connect(
+  () => ({}),
+  mapDispatchToProps
+)(Category);

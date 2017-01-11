@@ -4,10 +4,12 @@ import SubTask from '../SubTask/SubTask';
 
 import './SubTasks.css';
 
+import { connect } from 'react-redux';
+
 import { updateTaskCompletion } from '../../actions/TodoActions';
 
 
-export default function SubTasks({ subtasks }) {
+function SubTasks({ subtasks, updateTaskCompletion }) {
   if (!subtasks) {
     return (
       <div className="todo-subtasks">
@@ -41,3 +43,12 @@ SubTasks.propTypes = {
     title: PropTypes.string.isRequired
   }))
 };
+
+const mapDispatchToProps = {
+  updateTaskCompletion
+};
+
+export default connect(
+  () => ({}),
+  mapDispatchToProps
+)(SubTasks);

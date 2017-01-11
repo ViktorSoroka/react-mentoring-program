@@ -7,30 +7,30 @@ import CategoryTrees   from '../CategoryTrees/CategoryTrees';
 
 import { updateTask } from '../../actions/TodoActions';
 
-import TodoStore from '../../stores/TodosStore';
+import { connect } from 'react-redux';
 
 
-const checkActiveTaskPresence = (activeTaskId, router) => {
-  if (activeTaskId && !TodoStore.getActiveTask(activeTaskId)) {
-    return router.replace('/');
-  }
-};
-
-export default class TodoItem extends Component {
-  state = TodoStore.getTodoState();
-
+class TodoItem extends Component {
   componentDidMount() {
-    TodoStore.addChangeListener(this._onChange);
-
-    checkActiveTaskPresence(this.props.params.id, this.props.router);
+    this.checkActiveTaskPresence(this.props.params.id, this.props.router);
   }
 
   componentWillUpdate() {
-    checkActiveTaskPresence(this.props.params.id, this.props.router);
+    this.checkActiveTaskPresence(this.props.params.id, this.props.router);
   }
 
-  componentWillUnmount() {
-    TodoStore.removeChangeListener(this._onChange);
+  getSubTask(subtaskId) {
+    return this.props.subtasks[subtaskId];
+  }
+
+  getCategory = categoryId => {
+    return this.props.categories[categoryId];
+  };
+
+  checkActiveTaskPresence(activeSubTaskId, router) {
+    if (activeSubTaskId && !this.getSubTask(activeSubTaskId)) {
+      return router.replace('/');
+    }
   }
 
   onFormSubmit = data => {
@@ -38,28 +38,29 @@ export default class TodoItem extends Component {
   };
 
   render() {
-    const { categories } = this.state;
+    const { categories } = this.props;
 
-    const activeTaskId = this.props.params.id;
-    const activeTask   = TodoStore.getActiveTask(activeTaskId) || {};
+    const activeSubTaskId = this.props.params.id;
+    const activeTask      = this.getSubTask(activeSubTaskId) || {};
 
     const header = <Header title={activeTask ? activeTask.title : null}/>;
 
     let asideContent = <CategoryTrees categories={categories}
                                       activeCategoryId={activeTask.categoryId}
                                       activeSubtask={activeTask}
-                                      getCategory={TodoStore.getCategory}/>;
+                                      getCategory={this.getCategory}/>;
 
     const mainContent = activeTask ? <EditSubTaskForm subtask={activeTask} onFormSubmit={this.onFormSubmit}/> : null;
 
     return <Page {...{ header, asideContent, mainContent }}/>;
   }
-
-  _onChange = () => {
-    this.setState(TodoStore.getTodoState());
-  };
 }
 
 TodoItem.propTypes = {
   params: PropTypes.object.isRequired
 };
+
+export default connect(state => ({
+  categories: state.categories,
+  subtasks  : state.subtasks
+}))(TodoItem);
