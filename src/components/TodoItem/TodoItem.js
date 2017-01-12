@@ -33,12 +33,8 @@ class TodoItem extends Component {
     }
   }
 
-  onFormSubmit = data => {
-    updateTask(data);
-  };
-
   render() {
-    const { categories } = this.props;
+    const { categories, updateTask } = this.props;
 
     const activeSubTaskId = this.props.params.id;
     const activeTask      = this.getSubTask(activeSubTaskId) || {};
@@ -50,7 +46,7 @@ class TodoItem extends Component {
                                       activeSubtask={activeTask}
                                       getCategory={this.getCategory}/>;
 
-    const mainContent = activeTask ? <EditSubTaskForm subtask={activeTask} onFormSubmit={this.onFormSubmit}/> : null;
+    const mainContent = activeTask ? <EditSubTaskForm subtask={activeTask} onFormSubmit={updateTask}/> : null;
 
     return <Page {...{ header, asideContent, mainContent }}/>;
   }
@@ -61,6 +57,9 @@ TodoItem.propTypes = {
 };
 
 export default connect(state => ({
-  categories: state.categories,
-  subtasks  : state.subtasks
-}))(TodoItem);
+    categories: state.categories,
+    subtasks  : state.subtasks
+  }),
+  {
+    updateTask
+  })(TodoItem);

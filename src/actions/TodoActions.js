@@ -13,11 +13,10 @@ const {
       } = TodoActionTypes;
 
 
-export const addCategory = (title, parentId = null) => ({
+export const addCategory = title => ({
   type   : ADD_CATEGORY,
   payload: {
-    title,
-    parentId
+    title
   }
 });
 

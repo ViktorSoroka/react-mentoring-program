@@ -14,7 +14,7 @@ const {
       } = TodoActionTypes;
 
 
-function createCategory(title, parentId) {
+function createCategory(title, parentId = null) {
   return {
     id           : uuidV4(),
     dateAdded    : new Date().valueOf(),
@@ -60,9 +60,10 @@ function deleteCategory(categoryId, state) {
 export default function appReducer(state = { categories: {}, subtasks: {} }, { type, payload }) {
   switch (type) {
     case ADD_CATEGORY: {
-      if (!payload.title) return;
+      //todo handle checking in UI
+      if (!payload.title) return state;
 
-      const newCategory = createCategory(payload.title, payload.parentId);
+      const newCategory = createCategory(payload.title, null);
 
       return {
         subtasks  : { ...state.subtasks },
@@ -123,7 +124,8 @@ export default function appReducer(state = { categories: {}, subtasks: {} }, { t
     case ADD_TASK: {
       const { subtasks, categories } = state;
 
-      if (!payload.targetCategoryId || !categories[payload.targetCategoryId] || !payload.title) return;
+      //todo handle checking in UI
+      if (!payload.targetCategoryId || !categories[payload.targetCategoryId] || !payload.title) return state;
 
       const targetCategory = categories[payload.targetCategoryId];
       const newTask        = createTask(payload.title, targetCategory.id);
@@ -187,11 +189,8 @@ export default function appReducer(state = { categories: {}, subtasks: {} }, { t
       const { currentCategoryId, targetCategoryId, subtaskId } = payload;
 
       const currentCategory = categories[currentCategoryId];
-      const clonedSubtasks  = [...currentCategory.subtasks];
       const targetCategory  = categories[targetCategoryId];
       const task            = subtasks[subtaskId];
-
-      clonedSubtasks.splice(clonedSubtasks.indexOf(subtaskId), 1);
 
       return {
         categories: {
@@ -202,7 +201,7 @@ export default function appReducer(state = { categories: {}, subtasks: {} }, { t
           },
           [currentCategoryId]: {
             ...currentCategory,
-            subtasks: clonedSubtasks
+            subtasks: currentCategory.subtasks.filter(item => item !== subtaskId)
           }
         },
         subtasks  : {
