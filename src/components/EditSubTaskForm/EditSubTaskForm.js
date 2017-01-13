@@ -34,16 +34,23 @@ export default class EditSubTaskForm extends Component {
     return (
       <form className="todo-edit-subtask-form" onSubmit={this.onSubmit}>
         <fieldset className="todo-edit-subtask-form__fieldset todo-edit-subtask-form__fieldset--align-right">
-          <button className="todo-edit-subtask-form__btn" type="submit">Save Changes</button>
-          <button className="todo-edit-subtask-form__btn" type="button" onClick={this.context.router.goBack}>Cancel
+          <button className="todo-edit-subtask-form__btn"
+                  type="submit">Save Changes</button>
+          <button className="todo-edit-subtask-form__btn"
+                  type="button"
+                  onClick={this.context.router.goBack}>Cancel
           </button>
         </fieldset>
         <fieldset className="todo-edit-subtask-form__fieldset">
           <div>
-            <input type="text" defaultValue={title} ref={input => this.titleInput = input}/>
+            <input type="text"
+                   autoFocus
+                   defaultValue={title}
+                   ref={input => this.titleInput = input}/>
             {invalid ? <span className="todo-edit-subtask-form__error-msg">title could not be empty</span> : null}
           </div>
-          <label><input type="checkbox" defaultChecked={isCompleted}
+          <label><input type="checkbox"
+                        defaultChecked={isCompleted}
                         ref={input => this.isCompleteInput = input}/>Done</label>
         </fieldset>
         <textarea className="todo-edit-subtask-form__textarea"

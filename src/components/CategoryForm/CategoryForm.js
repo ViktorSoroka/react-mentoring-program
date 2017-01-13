@@ -35,13 +35,13 @@ export default class CategoryForm extends Component {
       <div>
         <form className="category-form" onSubmit={this.onFormSubmit}>
           <input type="text"
+                 autoFocus
                  value={categoryTitle}
                  onChange={this.onCategoryTitleChange}/>
           {invalid ? <span className="category-form__error-msg">Please enter valid category title.</span> : null }
           <div className="category-form-btn-wrap">
             <button className="category-form-btn"
-                    type="sumbit">Submit
-            </button>
+                    type="sumbit">Submit</button>
             {this.props.modalForm ?
               <button className="category-form-btn"
                       type="button"
