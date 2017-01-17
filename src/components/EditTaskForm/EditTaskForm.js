@@ -1,18 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 
-import './EditSubTaskForm.css';
+import './EditTaskForm.css';
 
 
-export default class EditSubTaskForm extends Component {
+export default class EditTaskForm extends Component {
   state = { invalid: false };
 
   onSubmit = e => {
     e.preventDefault();
 
-    const { subtask } = this.props;
+    const { task } = this.props;
 
     const formData = {
-      subtaskId  : subtask.id,
+      taskId  : task.id,
       title      : this.titleInput.value,
       isCompleted: this.isCompleteInput.checked,
       description: this.descriptionInput.value
@@ -23,37 +23,37 @@ export default class EditSubTaskForm extends Component {
     }
 
     this.props.onFormSubmit(formData);
-    this.context.router.push(`/category/${subtask.categoryId}`);
+    this.context.router.push(`/category/${task.categoryId}`);
   };
 
   render() {
-    const { title, isCompleted, description } = this.props.subtask;
+    const { title, isCompleted, description } = this.props.task;
 
     const { invalid } = this.state;
 
     return (
-      <form className="todo-edit-subtask-form" onSubmit={this.onSubmit}>
-        <fieldset className="todo-edit-subtask-form__fieldset todo-edit-subtask-form__fieldset--align-right">
-          <button className="todo-edit-subtask-form__btn"
+      <form className="todo-edit-task-form" onSubmit={this.onSubmit}>
+        <fieldset className="todo-edit-task-form__fieldset todo-edit-task-form__fieldset--align-right">
+          <button className="todo-edit-task-form__btn"
                   type="submit">Save Changes</button>
-          <button className="todo-edit-subtask-form__btn"
+          <button className="todo-edit-task-form__btn"
                   type="button"
                   onClick={this.context.router.goBack}>Cancel
           </button>
         </fieldset>
-        <fieldset className="todo-edit-subtask-form__fieldset">
+        <fieldset className="todo-edit-task-form__fieldset">
           <div>
             <input type="text"
                    autoFocus
                    defaultValue={title}
                    ref={input => this.titleInput = input}/>
-            {invalid ? <span className="todo-edit-subtask-form__error-msg">title could not be empty</span> : null}
+            {invalid ? <span className="todo-edit-task-form__error-msg">title could not be empty</span> : null}
           </div>
           <label><input type="checkbox"
                         defaultChecked={isCompleted}
                         ref={input => this.isCompleteInput = input}/>Done</label>
         </fieldset>
-        <textarea className="todo-edit-subtask-form__textarea"
+        <textarea className="todo-edit-task-form__textarea"
                   ref={input => this.descriptionInput = input}
                   defaultValue={description}
                   placeholder="description"
@@ -65,11 +65,11 @@ export default class EditSubTaskForm extends Component {
   }
 }
 
-EditSubTaskForm.contextTypes = {
+EditTaskForm.contextTypes = {
   router: PropTypes.object
 };
 
-EditSubTaskForm.propTypes = {
-  subtask     : PropTypes.object.isRequired,
+EditTaskForm.propTypes = {
+  task     : PropTypes.object.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
 };

@@ -1,0 +1,12 @@
+.todo-search-form {
+  display: block;
+}
+
+.todo-search-form__input {
+  padding: 5px 10px;
+}
+
+.todo-search-form__btn-submit {
+  width: 100px;
+  padding: 5px 10px;
+}

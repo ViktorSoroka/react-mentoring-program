@@ -1,29 +1,29 @@
-.todo-edit-subtask-form {
+.todo-edit-task-form {
   width: 100%;
 }
 
-.todo-edit-subtask-form__fieldset {
+.todo-edit-task-form__fieldset {
   padding: 0 0 10px 0;
   border: none;
   text-align: left;
 }
 
-.todo-edit-subtask-form__fieldset--align-right {
+.todo-edit-task-form__fieldset--align-right {
   text-align: right;
 }
 
-.todo-edit-subtask-form__textarea {
+.todo-edit-task-form__textarea {
   width: 100%;
   border-radius: 5px;
 }
 
-.todo-edit-subtask-form__btn {
+.todo-edit-task-form__btn {
   background: #fff;
   margin-left: 5px;
   border-radius: 3px;
 }
 
-.todo-edit-subtask-form__error-msg {
+.todo-edit-task-form__error-msg {
   padding-left: 5px;
   color: #f00;
   font-size: 12px;

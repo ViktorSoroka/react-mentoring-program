@@ -1,12 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 
-import Page          from '../Page/Page';
-import Header        from '../Header/Header';
-import MainSearch    from '../MainSearch/MainSearch';
-import Search        from '../Search/Search';
-import ProgressBar   from '../ProgressBar/ProgressBar';
-import CategoryTrees from '../CategoryTrees/CategoryTrees';
-import SubTasks      from '../SubTasks/SubTasks';
+import Page          from '../../components/Page/Page';
+import Header        from '../../components/Header/Header';
+import MainSearch    from '../../components/MainSearch/MainSearch';
+import Search        from '../../components/Search/Search';
+import ProgressBar   from '../../components/ProgressBar/ProgressBar';
+import CategoryTrees from '../../components/CategoryTrees/CategoryTrees';
+import Tasks         from '../../components/Tasks/Tasks';
+
+import { v4 } from 'node-uuid';
 
 import { connect } from 'react-redux';
 
@@ -35,8 +37,8 @@ class TodoList extends Component {
     }
   }
 
-  getSubtasks(subtasks, activeCategory) {
-    let { router: { location: { query: { showDone, taskname } } } } = this.props;
+  getTasks(tasks, activeCategory) {
+    let { router: { location: { query: { showDone, taskName } } } } = this.props;
 
     showDone = showDone && JSON.parse(showDone);
 
@@ -44,13 +46,13 @@ class TodoList extends Component {
       return null;
     }
 
-    return activeCategory.subtasks.reduce((res, subtaskId) => {
-      const subtask = subtasks[subtaskId];
+    return activeCategory.tasks.reduce((res, taskId) => {
+      const task = tasks[taskId];
 
-      if ((taskname && !(new RegExp(`^${taskname}`)).test(subtask.title)) ||
-        (showDone && !subtask.isCompleted)) return res;
+      if ((taskName && !(new RegExp(`^${taskName}`)).test(task.title)) ||
+        (showDone && !task.isCompleted)) return res;
 
-      res.push(subtask);
+      res.push(task);
 
       return res;
     }, []);
@@ -65,17 +67,17 @@ class TodoList extends Component {
   }
 
   render() {
-    const { categories, subtasks, addCategory, addTask } = this.props;
-    const activeCategoryId                               = this.props.params.id;
+    const { categories, tasks, addCategory, addTask } = this.props;
+    const activeCategoryId                            = this.props.params.id;
 
-    const categoryTasks = this.getSubtasks(subtasks, this.getCategory(activeCategoryId));
+    const categoryTasks = this.getTasks(tasks, this.getCategory(activeCategoryId));
     const progressWidth = this.calculateProgressWidth(categoryTasks);
 
-    const header = (
+    const header =
       <Header title="To-Do List">
         <MainSearch />
         <ProgressBar width={progressWidth}/>
-      </Header>);
+      </Header>;
 
     const asideContent = <div>
       <Search handleSubmit={addCategory}
@@ -88,9 +90,10 @@ class TodoList extends Component {
 
     const mainContent = <div>
       <Search handleSubmit={addTask}
+              isSubmitDisabled={() => !activeCategoryId}
               payload={{ targetCategoryId: activeCategoryId }}
-              placeholder={"Enter subtask title"}/>
-      <SubTasks subtasks={categoryTasks}/>
+              placeholder={"Enter task title"}/>
+      <Tasks tasks={categoryTasks}/>
     </div>;
 
     return <Page {...{ header, asideContent, mainContent }}/>;
@@ -103,7 +106,7 @@ TodoList.propTypes = {
 
 const mapStateToProps = state => ({
   categories: state.categories,
-  subtasks  : state.subtasks
+  tasks     : state.tasks
 });
 
 const mapDispatchToProps = {

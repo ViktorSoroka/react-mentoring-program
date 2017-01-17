@@ -2,6 +2,9 @@ import React, { PropTypes } from 'react';
 
 import CategoryTree from '../CategoryTree/CategoryTree';
 
+import { deleteCategory } from '../../actions/TodoActions';
+
+
 import './CategoryTrees.css';
 
 
@@ -17,7 +20,7 @@ const getTopLevelCategories = categories => {
   }, []);
 };
 
-export default function CategoryTrees({ categories, activeCategoryId, activeSubtask, getCategory }) {
+export default function CategoryTrees({ categories, activeCategoryId, activeTask, getCategory }) {
   return (
     <div className="todo-category-trees">
       {getTopLevelCategories(categories).map(category => {
@@ -25,8 +28,9 @@ export default function CategoryTrees({ categories, activeCategoryId, activeSubt
                              category={category}
                              parentCategory={null}
                              getCategory={getCategory}
-                             activeSubtask={activeSubtask}
-                             activeCategoryId={activeCategoryId}/>
+                             activeTask={activeTask}
+                             activeCategoryId={activeCategoryId}
+                             deleteCategory={(id) => deleteCategory(id)}/>
       })}
     </div>
   );
@@ -36,5 +40,5 @@ CategoryTrees.propTypes = {
   getCategory     : PropTypes.func.isRequired,
   categories      : PropTypes.object.isRequired,
   activeCategoryId: PropTypes.string,
-  activeSubtask   : PropTypes.object
+  activeTask      : PropTypes.object
 };

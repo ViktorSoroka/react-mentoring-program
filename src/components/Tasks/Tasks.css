@@ -1,4 +1,4 @@
-.todo-subtasks {
+.todo-tasks {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -11,6 +11,6 @@
   background-color: #fff;
 }
 
-.todo-subtasks__no-results {
+.todo-tasks__no-results {
   margin: auto;
 }

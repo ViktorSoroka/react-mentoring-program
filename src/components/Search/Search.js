@@ -17,17 +17,26 @@ export default class Search extends Component {
     this.setState({ searchValue: '' });
   };
 
+  isSubmitDisabled() {
+    const { isSubmitDisabled } = this.props;
+
+    return !this.state.searchValue || (isSubmitDisabled && isSubmitDisabled());
+  }
+
   render() {
     const { searchValue } = this.state;
 
     return (
       <div className="todo-search">
         <form className="todo-search-form" onSubmit={this.onSubmit}>
-          <input type="text"
+          <input className="todo-search-form__input"
                  placeholder={this.props.placeholder}
                  value={searchValue}
                  onChange={this.onSearchValueChange}/>
-          <input type="submit" value="Add"/>
+          <input className="todo-search-form__btn-submit"
+                 disabled={this.isSubmitDisabled()}
+                 type="submit"
+                 value="Add"/>
         </form>
       </div>
     );
@@ -35,6 +44,7 @@ export default class Search extends Component {
 };
 
 Search.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  placeholder : PropTypes.string.isRequired,
+  isSubmitDisabled: PropTypes.func,
+  handleSubmit    : PropTypes.func.isRequired,
+  placeholder     : PropTypes.string.isRequired,
 };

@@ -46,7 +46,7 @@ export default class CategoryTree extends Component {
 
 CategoryTree.propTypes = {
   category        : PropTypes.object.isRequired,
-  activeSubtask   : PropTypes.object,
+  activeTask      : PropTypes.object,
   parentCategory  : PropTypes.object,
   activeCategoryId: PropTypes.string
 };

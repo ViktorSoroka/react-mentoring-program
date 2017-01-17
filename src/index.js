@@ -6,8 +6,8 @@ import { createStore } from 'redux';
 import appReducer      from './reducers';
 
 import App      from './components/App/App';
-import TodoList from './components/TodoList/TodoList';
-import TodoItem from './components/TodoItem/TodoItem';
+import TodoList from './containers/TodoList/TodoList';
+import TodoItem from './containers/TodoItem/TodoItem';
 import NotFound from './components/NotFound/NotFound';
 
 import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
@@ -15,7 +15,7 @@ import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
 import './index.css';
 
 
-const store = createStore(appReducer);
+const store = createStore(appReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 ReactDOM.render(
   <Provider store={store}>

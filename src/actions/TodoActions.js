@@ -1,4 +1,5 @@
 import TodoActionTypes from '../constants/TodoActionTypes';
+import { v4 } from 'node-uuid';
 
 
 const {
@@ -13,16 +14,18 @@ const {
       } = TodoActionTypes;
 
 
-export const addCategory = title => ({
+export const addCategory = (title) => ({
   type   : ADD_CATEGORY,
   payload: {
-    title
+    title,
+    id: v4()
   }
 });
 
 export const addNestedCategory = (parentId, title) => ({
   type   : ADD_NESTED_CATEGORY,
   payload: {
+    id: v4(),
     title,
     parentId
   }
@@ -36,44 +39,47 @@ export const editCategory = (categoryId, title) => ({
   }
 });
 
-export const deleteCategory = (categoryId) => ({
+export const deleteCategory = ({ categoryId, categoriesToDelete, tasksToDelete }) => ({
   type   : DELETE_CATEGORY,
   payload: {
-    categoryId
+    categoryId,
+    categoriesToDelete,
+    tasksToDelete,
   }
 });
 
 export const addTask = (title, payload) => ({
   type   : ADD_TASK,
   payload: {
+    id              : v4(),
     title,
     targetCategoryId: payload.targetCategoryId
   }
 });
 
-export const updateTask = ({ subtaskId, title, isCompleted, description }) => ({
+export const updateTask = ({ taskId, title, isCompleted, description }) => ({
   type   : UPDATE_TASK,
   payload: {
-    subtaskId,
+    taskId,
     title,
     isCompleted,
     description
   }
 });
 
-export const changeSubtaskParent = ({ currentCategoryId, targetCategoryId, subtaskId }) => ({
+export const changeTaskParent = ({ currentCategoryId, targetCategoryId, taskId }) => ({
   type   : CHANGE_SUBTASK_PARENT,
   payload: {
     currentCategoryId,
     targetCategoryId,
-    subtaskId
+    taskId
   }
 });
 
-export const updateTaskCompletion = ({ subtaskId, isCompleted }) => ({
-  type: UPDATE_TASK_COMPLETION,
+export const updateTaskCompletion = ({ taskId, isCompleted }) => ({
+  type   : UPDATE_TASK_COMPLETION,
   payload: {
-    subtaskId,
+    taskId,
     isCompleted
   }
 });

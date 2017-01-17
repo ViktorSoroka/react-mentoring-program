@@ -2,39 +2,39 @@ import React, { Component, PropTypes } from 'react';
 
 import { Link }  from 'react-router';
 
-import './SubTask.css';
+import './Task.css';
 
 
-export default class SubTask extends Component {
+export default class Task extends Component {
   onCompletedChange = e => {
     this.props.onCompletedChange({
-      subtaskId  : this.props.subtask.id,
+      taskId  : this.props.task.id,
       isCompleted: e.target.checked
     });
   };
 
   render() {
-    const { subtask } = this.props;
+    const { task } = this.props;
 
     return (
-      <div className="todo-subtask">
+      <div className="todo-task">
         <div>
           <input type="checkbox"
-                 checked={subtask.isCompleted}
+                 checked={task.isCompleted}
                  onChange={this.onCompletedChange}/>
-          <strong className="todo-subtask__title">{subtask.title}</strong>
+          <strong className="todo-task__title">{task.title}</strong>
         </div>
         <div>
-          <Link className="todo-subtask__btn-edit"
-                to={{ pathname: `/tasks/${subtask.id}` }}><span className="icon-edit"/></Link>
+          <Link className="todo-task__btn-edit"
+                to={{ pathname: `/tasks/${task.id}` }}><span className="icon-edit"/></Link>
         </div>
       </div>
     );
   }
 }
 
-SubTask.propTypes = {
-  subtask          : PropTypes.shape({
+Task.propTypes = {
+  task          : PropTypes.shape({
     id   : PropTypes.string.isRequired,
     title: PropTypes.string.isRequired
   }),

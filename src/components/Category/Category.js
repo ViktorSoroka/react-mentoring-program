@@ -11,7 +11,7 @@ import {
   deleteCategory,
   addNestedCategory,
   editCategory,
-  changeSubtaskParent,
+  changeTaskParent,
 } from '../../actions/TodoActions';
 
 import './Category.css';
@@ -21,12 +21,35 @@ const isCategoryHasSubCategories = ({ subcategories = [] } = {}) => subcategorie
 
 class Category extends Component {
   onCategoryRemoval = () => {
-    const { category, deleteCategory } = this.props;
+    const { category } = this.props;
 
     this.confirmationDialog.show({
       modalTitle: `Are you sure want to remove ${category.title}?`,
-      onConfirm : deleteCategory.bind(this, category.id)
+      onConfirm : this.deleteSelectedCategory.bind(this, category.id)
     });
+  };
+
+  _getCategoryTreeData = (rootId, data = {
+    categoriesToDelete: [],
+    tasksToDelete     : []
+  }) => {
+    const category                              = this.props.getCategory(rootId);
+    const { categoriesToDelete, tasksToDelete } = data;
+
+    categoriesToDelete.push(rootId);
+    tasksToDelete.push(...category.tasks);
+
+    category.subcategories.forEach(id => this._getCategoryTreeData(id, data));
+
+    return data;
+  };
+
+  deleteSelectedCategory = (categoryId) => {
+    const { deleteCategory } = this.props;
+
+    const dataToDelete = this._getCategoryTreeData(categoryId);
+
+    deleteCategory({ ...dataToDelete, categoryId });
   };
 
   onNestedCategoryAdd = () => {
@@ -48,20 +71,20 @@ class Category extends Component {
     });
   };
 
-  onChangeSubtaskParent = () => {
-    const { activeCategoryId, activeSubtask, category, changeSubtaskParent }  = this.props;
+  onChangeTaskParent = () => {
+    const { activeCategoryId, activeTask, category, changeTaskParent } = this.props;
 
-    changeSubtaskParent({
+    changeTaskParent({
       currentCategoryId: activeCategoryId,
       targetCategoryId : category.id,
-      subtaskId        : activeSubtask.id
+      taskId           : activeTask.id
     });
   };
 
   render() {
     const {
             category,
-            activeSubtask,
+            activeTask,
             toggleChildrenVisibility
           } = this.props;
 
@@ -73,10 +96,11 @@ class Category extends Component {
               <input type="checkbox"
                      name="toggle-category"
                      onChange={toggleChildrenVisibility}/> : null}
-            <Link className="todo-category__link"
-                  to={{ pathname: `/category/${category.id}` }}
-                  activeClassName="is-active">{category.title}</Link>
-            {!activeSubtask &&
+            {!activeTask ?
+              <Link className="todo-category__link"
+                    to={{ pathname: `/category/${category.id}` }}
+                    activeClassName="is-active">{category.title}</Link> : <span>{category.title}</span> }
+            {!activeTask &&
             <button className="toto-category__btn-edit"
                     onClick={this.onCategoryEdit}>
               <span className="icon-edit"/>
@@ -84,7 +108,7 @@ class Category extends Component {
             }
           </div>
           <div>
-            {!activeSubtask ?
+            {!activeTask ?
               <div>
                 <button className="toto-category__btn-remove"
                         onClick={this.onCategoryRemoval}>
@@ -95,9 +119,9 @@ class Category extends Component {
                   <span className="icon-plus-squared-alt"/>
                 </button>
               </div> :
-              activeSubtask.categoryId !== category.id ?
+              activeTask.categoryId !== category.id ?
                 <button className="toto-category__btn-move"
-                        onClick={this.onChangeSubtaskParent}>
+                        onClick={this.onChangeTaskParent}>
                   <span className="icon-reply"/></button> : null }
           </div>
         </div>
@@ -113,17 +137,17 @@ class Category extends Component {
 Category.propTypes = {
   category                : PropTypes.object.isRequired,
   toggleChildrenVisibility: PropTypes.func.isRequired,
-  activeSubtask           : PropTypes.object,
+  activeTask              : PropTypes.object,
   parentCategory          : PropTypes.object,
   activeCategoryId        : PropTypes.string
 };
 
-const mapDispatchToProps = {
+const mapDispatchToProps = ({
   deleteCategory,
   addNestedCategory,
   editCategory,
-  changeSubtaskParent,
-};
+  changeTaskParent,
+});
 
 export default connect(
   () => ({}),

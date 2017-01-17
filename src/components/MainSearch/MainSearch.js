@@ -27,7 +27,7 @@ export default class MainSearch extends Component {
     e.preventDefault();
 
     this.updateQuery({
-      taskname: this.searchInput.value
+      taskName: this.searchInput.value
     });
   };
 
