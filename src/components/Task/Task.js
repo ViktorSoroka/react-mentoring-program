@@ -8,7 +8,7 @@ import './Task.css';
 export default class Task extends Component {
   onCompletedChange = e => {
     this.props.onCompletedChange({
-      taskId  : this.props.task.id,
+      id         : this.props.task.id,
       isCompleted: e.target.checked
     });
   };
@@ -34,7 +34,7 @@ export default class Task extends Component {
 }
 
 Task.propTypes = {
-  task          : PropTypes.shape({
+  task             : PropTypes.shape({
     id   : PropTypes.string.isRequired,
     title: PropTypes.string.isRequired
   }),

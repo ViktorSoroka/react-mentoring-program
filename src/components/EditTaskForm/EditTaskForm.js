@@ -12,7 +12,7 @@ export default class EditTaskForm extends Component {
     const { task } = this.props;
 
     const formData = {
-      taskId  : task.id,
+      id         : task.id,
       title      : this.titleInput.value,
       isCompleted: this.isCompleteInput.checked,
       description: this.descriptionInput.value
@@ -35,7 +35,8 @@ export default class EditTaskForm extends Component {
       <form className="todo-edit-task-form" onSubmit={this.onSubmit}>
         <fieldset className="todo-edit-task-form__fieldset todo-edit-task-form__fieldset--align-right">
           <button className="todo-edit-task-form__btn"
-                  type="submit">Save Changes</button>
+                  type="submit">Save Changes
+          </button>
           <button className="todo-edit-task-form__btn"
                   type="button"
                   onClick={this.context.router.goBack}>Cancel
@@ -70,6 +71,6 @@ EditTaskForm.contextTypes = {
 };
 
 EditTaskForm.propTypes = {
-  task     : PropTypes.object.isRequired,
+  task        : PropTypes.object.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
 };

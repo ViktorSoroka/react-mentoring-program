@@ -4,7 +4,7 @@ import { v4 } from 'node-uuid';
 
 const {
         ADD_CATEGORY,
-        EDIT_CATEGORY,
+        UPDATE_CATEGORY,
         DELETE_CATEGORY,
         ADD_NESTED_CATEGORY,
         ADD_TASK,
@@ -31,18 +31,18 @@ export const addNestedCategory = (parentId, title) => ({
   }
 });
 
-export const editCategory = (categoryId, title) => ({
-  type   : EDIT_CATEGORY,
+export const updateCategory = (id, title) => ({
+  type   : UPDATE_CATEGORY,
   payload: {
     title,
-    categoryId
+    id
   }
 });
 
-export const deleteCategory = ({ categoryId, categoriesToDelete, tasksToDelete }) => ({
+export const deleteCategory = ({ id, categoriesToDelete, tasksToDelete }) => ({
   type   : DELETE_CATEGORY,
   payload: {
-    categoryId,
+    id,
     categoriesToDelete,
     tasksToDelete,
   }
@@ -53,33 +53,33 @@ export const addTask = (title, payload) => ({
   payload: {
     id              : v4(),
     title,
-    targetCategoryId: payload.targetCategoryId
+    categoryId: payload.targetCategoryId
   }
 });
 
-export const updateTask = ({ taskId, title, isCompleted, description }) => ({
+export const updateTask = ({ id, title, isCompleted, description }) => ({
   type   : UPDATE_TASK,
   payload: {
-    taskId,
+    id,
     title,
     isCompleted,
     description
   }
 });
 
-export const changeTaskParent = ({ currentCategoryId, targetCategoryId, taskId }) => ({
+export const changeTaskParent = ({ currentCategoryId, targetCategoryId, id }) => ({
   type   : CHANGE_SUBTASK_PARENT,
   payload: {
     currentCategoryId,
     targetCategoryId,
-    taskId
+    id
   }
 });
 
-export const updateTaskCompletion = ({ taskId, isCompleted }) => ({
+export const updateTaskCompletion = ({ id, isCompleted }) => ({
   type   : UPDATE_TASK_COMPLETION,
   payload: {
-    taskId,
+    id,
     isCompleted
   }
 });

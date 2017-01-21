@@ -1,88 +1,47 @@
 import TodoActionTypes from '../constants/TodoActionTypes';
+import task            from './task';
+import undoable        from 'redux-undo';
 
 
 const {
-        DELETE_CATEGORY,
         ADD_TASK,
         UPDATE_TASK,
         UPDATE_TASK_COMPLETION,
-        CHANGE_SUBTASK_PARENT
+        CHANGE_SUBTASK_PARENT,
+        DELETE_CATEGORY
       } = TodoActionTypes;
 
-function createTask({ id, title, categoryId }) {
-  return {
-    id,
-    title,
-    categoryId,
-    description: '',
-    isCompleted: false
-  };
-}
 
-export default function (state = {}, { type, payload }) {
-  switch (type) {
-    case ADD_TASK: {
-      const newTask = createTask({
-        id        : payload.id,
-        title     : payload.title,
-        categoryId: payload.targetCategoryId,
-      });
-
-      return {
-        ...state,
-        [newTask.id]: newTask
-      };
-    }
-
-    case UPDATE_TASK: {
-      const { title, description, isCompleted, taskId } = payload;
-
-      const task = state[taskId];
-
-      return {
-        ...state,
-        [taskId]: {
-          ...task,
-          title,
-          description,
-          isCompleted
-        }
-      };
-    }
-
+const tasks = (state = {}, action) => {
+  switch (action.type) {
+    case ADD_TASK:
+    case UPDATE_TASK:
     case UPDATE_TASK_COMPLETION: {
-      const { isCompleted, taskId } = payload;
-
-      const task = state[taskId];
+      const { payload: { id } } = action;
 
       return {
         ...state,
-        [taskId]: {
-          ...task,
-          isCompleted
-        }
-      }
+        [id]: task(state[id], action)
+      };
     }
-
     case CHANGE_SUBTASK_PARENT: {
-      const { targetCategoryId, taskId } = payload;
-
-      const task = state[taskId];
+      const { payload: { id, targetCategoryId } } = action;
 
       return {
         ...state,
-        [taskId]: {
-          ...task,
-          categoryId: targetCategoryId
-        }
-      }
+        [id]: task(state[id], {
+          type: UPDATE_TASK,
+          payload: {
+            categoryId: targetCategoryId
+          }
+        })
+      };
     }
-
     case DELETE_CATEGORY: {
       const newState = {};
 
       Object.keys(state).forEach(key => {
-        if (!payload.tasksToDelete.includes(key)) {
+        if (!action.payload.tasksToDelete.includes(key)) {
           newState[key] = state[key];
         }
       });
@@ -93,3 +52,5 @@ export default function (state = {}, { type, payload }) {
       return state;
   }
 };
+
+export default undoable(tasks);

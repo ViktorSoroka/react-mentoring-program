@@ -19,8 +19,8 @@ class TodoItem extends Component {
     this.checkActiveTaskPresence(this.props.params.id, this.props.router);
   }
 
-  getTask(taskId) {
-    return this.props.tasks[taskId];
+  getTask(id) {
+    return this.props.tasks[id];
   }
 
   getCategory = categoryId => {
@@ -57,8 +57,8 @@ TodoItem.propTypes = {
 };
 
 export default connect(state => ({
-    categories: state.categories,
-    tasks     : state.tasks
+    categories: state.categories.present,
+    tasks     : state.tasks.present
   }),
   {
     updateTask

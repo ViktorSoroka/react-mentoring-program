@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import {
   deleteCategory,
   addNestedCategory,
-  editCategory,
+  updateCategory,
   changeTaskParent,
 } from '../../actions/TodoActions';
 
@@ -44,12 +44,12 @@ class Category extends Component {
     return data;
   };
 
-  deleteSelectedCategory = (categoryId) => {
+  deleteSelectedCategory = (id) => {
     const { deleteCategory } = this.props;
 
-    const dataToDelete = this._getCategoryTreeData(categoryId);
+    const dataToDelete = this._getCategoryTreeData(id);
 
-    deleteCategory({ ...dataToDelete, categoryId });
+    deleteCategory({ ...dataToDelete, id });
   };
 
   onNestedCategoryAdd = () => {
@@ -62,11 +62,11 @@ class Category extends Component {
   };
 
   onCategoryEdit = () => {
-    const { category, editCategory } = this.props;
+    const { category, updateCategory } = this.props;
 
     this.categoryFormDialog.show({
       modalTitle: `Type new category title for selected category!`,
-      onConfirm : editCategory.bind(this, category.id),
+      onConfirm : updateCategory.bind(this, category.id),
       data      : { categoryTitle: category.title }
     });
   };
@@ -77,7 +77,7 @@ class Category extends Component {
     changeTaskParent({
       currentCategoryId: activeCategoryId,
       targetCategoryId : category.id,
-      taskId           : activeTask.id
+      id               : activeTask.id
     });
   };
 
@@ -145,7 +145,7 @@ Category.propTypes = {
 const mapDispatchToProps = ({
   deleteCategory,
   addNestedCategory,
-  editCategory,
+  updateCategory,
   changeTaskParent,
 });
 

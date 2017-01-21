@@ -7,8 +7,7 @@ import Search        from '../../components/Search/Search';
 import ProgressBar   from '../../components/ProgressBar/ProgressBar';
 import CategoryTrees from '../../components/CategoryTrees/CategoryTrees';
 import Tasks         from '../../components/Tasks/Tasks';
-
-import { v4 } from 'node-uuid';
+import UndoRedo      from '../../containers/UndoRedo/UndoRedo';
 
 import { connect } from 'react-redux';
 
@@ -46,8 +45,8 @@ class TodoList extends Component {
       return null;
     }
 
-    return activeCategory.tasks.reduce((res, taskId) => {
-      const task = tasks[taskId];
+    return activeCategory.tasks.reduce((res, id) => {
+      const task = tasks[id];
 
       if ((taskName && !(new RegExp(`^${taskName}`)).test(task.title)) ||
         (showDone && !task.isCompleted)) return res;
@@ -77,6 +76,7 @@ class TodoList extends Component {
       <Header title="To-Do List">
         <MainSearch />
         <ProgressBar width={progressWidth}/>
+        <UndoRedo />
       </Header>;
 
     const asideContent = <div>
@@ -105,8 +105,8 @@ TodoList.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  categories: state.categories,
-  tasks     : state.tasks
+  categories: state.categories.present,
+  tasks     : state.tasks.present
 });
 
 const mapDispatchToProps = {

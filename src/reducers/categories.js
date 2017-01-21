@@ -1,77 +1,55 @@
-import { v4 }          from 'node-uuid';
 import TodoActionTypes from '../constants/TodoActionTypes';
+import category        from './category';
+import undoable        from 'redux-undo'
 
 
 const {
         ADD_CATEGORY,
-        EDIT_CATEGORY,
+        UPDATE_CATEGORY,
         DELETE_CATEGORY,
         ADD_NESTED_CATEGORY,
         ADD_TASK,
         CHANGE_SUBTASK_PARENT
       } = TodoActionTypes;
 
-
-function createCategory({ id, title, parentId = null }) {
-  return {
-    id,
-    title,
-    parentId,
-    tasks        : [],
-    subcategories: []
-  };
-}
-
-export default function (state = {}, { type, payload }) {
-  switch (type) {
-    case ADD_CATEGORY: {
-      const newCategory = createCategory({
-        id      : payload.id,
-        title   : payload.title,
-        parentId: null
-      });
+const categories = (state = {}, action) => {
+  switch (action.type) {
+    case ADD_CATEGORY:
+    case UPDATE_CATEGORY: {
+      const { payload } = action;
 
       return {
         ...state,
-        [newCategory.id]: newCategory
+        [payload.id]: category(state[payload.id], action)
       };
     }
 
     case ADD_NESTED_CATEGORY: {
+      const { payload } = action;
+
       const parentCategory = state[payload.parentId];
-      const newCategory    = createCategory({
-        id      : payload.id,
-        title   : payload.title,
-        parentId: payload.parentId
-      });
 
       return {
         ...state,
-        [newCategory.id]  : newCategory,
-        [payload.parentId]: {
-          ...parentCategory,
-          subcategories: [newCategory.id, ...parentCategory.subcategories]
-        }
-      };
-    }
-
-    case EDIT_CATEGORY: {
-      const category = state[payload.categoryId];
-
-      return {
-        ...state,
-        [payload.categoryId]: {
-          ...category,
-          title: payload.title
-        }
+        [payload.id]      : category(undefined, {
+          type   : ADD_CATEGORY,
+          payload: action.payload
+        }),
+        [payload.parentId]: category(parentCategory, {
+          type   : UPDATE_CATEGORY,
+          payload: {
+            subcategories: [...parentCategory.subcategories, payload.id]
+          }
+        })
       };
     }
 
     case DELETE_CATEGORY: {
       const newState = {};
-      const { categoryId, categoriesToDelete } = payload;
 
-      const category = state[categoryId];
+      const { id, categoriesToDelete } = action.payload;
+
+      const category       = state[id];
       const parentCategory = state[category.parentId];
 
       Object.keys(state).forEach(key => {
@@ -81,44 +59,54 @@ export default function (state = {}, { type, payload }) {
       });
 
       if (parentCategory) {
-        newState[parentCategory.id] = {
-          ...parentCategory,
-          subcategories: parentCategory.subcategories
-            .filter(id => categoryId !== id)
-        }
+        newState[parentCategory.id] = category(parentCategory, {
+          type   : UPDATE_CATEGORY,
+          payload: {
+            subcategories: parentCategory.subcategories
+              .filter(categoryId => categoryId !== id)
+          }
+        });
       }
 
       return newState;
     }
 
     case ADD_TASK: {
-      const targetCategory = state[payload.targetCategoryId];
+      const { payload } = action;
+
+      const targetCategory = state[payload.categoryId];
 
       return {
         ...state,
-        [targetCategory.id]: {
-          ...targetCategory,
-          tasks: [payload.id, ...targetCategory.tasks]
-        }
+        [targetCategory.id]: category(targetCategory, {
+          type   : UPDATE_CATEGORY,
+          payload: {
+            tasks: [payload.id, ...targetCategory.tasks]
+          }
+        })
       };
     }
 
     case CHANGE_SUBTASK_PARENT: {
-      const { currentCategoryId, targetCategoryId, taskId } = payload;
+      const { currentCategoryId, targetCategoryId, id } = action.payload;
 
       const currentCategory = state[currentCategoryId];
       const targetCategory  = state[targetCategoryId];
 
       return {
         ...state,
-        [targetCategoryId] : {
-          ...targetCategory,
-          tasks: [taskId, ...targetCategory.tasks]
-        },
-        [currentCategoryId]: {
-          ...currentCategory,
-          tasks: currentCategory.tasks.filter(item => item !== taskId)
-        }
+        [targetCategoryId] : category(targetCategory, {
+          type   : UPDATE_CATEGORY,
+          payload: {
+            tasks: [id, ...targetCategory.tasks]
+          }
+        }),
+        [currentCategoryId]: category(currentCategory, {
+          type   : UPDATE_CATEGORY,
+          payload: {
+            tasks: currentCategory.tasks.filter(taskId => taskId !== id)
+          }
+        })
       }
     }
 
@@ -126,3 +114,5 @@ export default function (state = {}, { type, payload }) {
       return state;
   }
 };
+
+export default undoable(categories);
