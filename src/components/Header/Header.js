@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import './Header.css';
 
@@ -10,9 +11,9 @@ export default function Header({ title, children }) {
       {children}
     </header>
   );
-};
+}
 
 Header.propTypes = {
-  title   : PropTypes.string,
+  title: PropTypes.string,
   children: PropTypes.node
 };

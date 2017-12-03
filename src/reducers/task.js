@@ -2,11 +2,11 @@ import TodoActionTypes from '../constants/TodoActionTypes';
 
 
 const {
-        ADD_TASK,
-        UPDATE_TASK,
-        UPDATE_TASK_COMPLETION,
-        CHANGE_SUBTASK_PARENT,
-      } = TodoActionTypes;
+  ADD_TASK,
+  UPDATE_TASK,
+  UPDATE_TASK_COMPLETION,
+  CHANGE_SUBTASK_PARENT,
+} = TodoActionTypes;
 
 function createTask({ id, title, categoryId, description = '', isCompleted = false }) {
   return {

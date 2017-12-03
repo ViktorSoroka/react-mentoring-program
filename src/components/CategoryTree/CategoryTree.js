@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Category from '../Category/Category';
 
@@ -24,17 +25,23 @@ export default class CategoryTree extends Component {
     };
 
     return (
-      <div className="todo-category-tree"
-           key={category.id}>
+      <div
+        className="todo-category-tree"
+        key={category.id}
+      >
         <Category {...this.props} {...newCategoryProps}/>
         {(isCategoryHasSubCategories(category) && this.state.showChildren) ?
           <div className="todo-category-tree__subcategories">
             {category.subcategories.map(childCategoryId => {
                 const childCategory = getCategory(childCategoryId);
-                return <CategoryTree {...this.props}
-                                     key={childCategory.id}
-                                     parentCategory={category}
-                                     category={childCategory}/>
+                return (
+                  <CategoryTree
+                    {...this.props}
+                    key={childCategory.id}
+                    parentCategory={category}
+                    category={childCategory}
+                  />
+                );
               }
             )}
           </div>
@@ -45,8 +52,9 @@ export default class CategoryTree extends Component {
 }
 
 CategoryTree.propTypes = {
-  category        : PropTypes.object.isRequired,
-  activeTask      : PropTypes.object,
-  parentCategory  : PropTypes.object,
+  category: PropTypes.object.isRequired,
+  getCategory: PropTypes.func.isRequired,
+  activeTask: PropTypes.object,
+  parentCategory: PropTypes.object,
   activeCategoryId: PropTypes.string
 };

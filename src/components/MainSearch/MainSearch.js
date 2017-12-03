@@ -1,9 +1,12 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import qs from 'qs';
+import { withRouter } from 'react-router-dom';
 
 import './MainSearch.css';
 
 
-export default class MainSearch extends Component {
+class MainSearch extends Component {
   onCheckboxChange = e => {
     this.updateQuery({
       showDone: e.target.checked
@@ -11,15 +14,13 @@ export default class MainSearch extends Component {
   };
 
   updateQuery(data) {
-    const { router }   = this.context;
-    const { location } = router;
+    const { location, history } = this.props;
 
-    router.push({
+    const queryParams = qs.parse(location.search.slice(1));
+
+    history.push({
       ...location,
-      query: {
-        ...location.query,
-        ...data
-      }
+      search: qs.stringify({ ...queryParams, ...data })
     });
   }
 
@@ -36,17 +37,23 @@ export default class MainSearch extends Component {
       <div className="todo-main-search">
         <form className="todo-main-search-form" onSubmit={this.onSubmit}>
           <label className="todo-main-search-form__label">
-            <input type="checkbox"
-                   onChange={this.onCheckboxChange}/>Show done only</label>
-          <input type="search"
-                 placeholder="search"
-                 ref={input => this.searchInput = input}/>
+            <input
+              type="checkbox"
+              onChange={this.onCheckboxChange}/>Show done only
+          </label>
+          <input
+            type="search"
+            placeholder="search"
+            ref={input => this.searchInput = input}/>
         </form>
       </div>
     );
   }
+}
+
+MainSearch.propTypes = {
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
-MainSearch.contextTypes = {
-  router: PropTypes.object
-};
+export default withRouter(MainSearch);

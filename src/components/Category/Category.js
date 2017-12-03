@@ -1,12 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 import ConfirmationModal from '../Modals/ConfirmationModal/ConfirmationModal';
-import Modal             from '../Modals/Modal/Modal';
-import CategoryForm      from '../CategoryForm/CategoryForm';
-import { Link }          from 'react-router';
-
-import { connect } from 'react-redux';
-
+import Modal from '../Modals/Modal/Modal';
+import CategoryForm from '../CategoryForm/CategoryForm';
 import {
   deleteCategory,
   addNestedCategory,
@@ -25,15 +24,15 @@ class Category extends Component {
 
     this.confirmationDialog.show({
       modalTitle: `Are you sure want to remove ${category.title}?`,
-      onConfirm : this.deleteSelectedCategory.bind(this, category.id)
+      onConfirm: this.deleteSelectedCategory.bind(this, category.id)
     });
   };
 
   _getCategoryTreeData = (rootId, data = {
     categoriesToDelete: [],
-    tasksToDelete     : []
+    tasksToDelete: []
   }) => {
-    const category                              = this.props.getCategory(rootId);
+    const category = this.props.getCategory(rootId);
     const { categoriesToDelete, tasksToDelete } = data;
 
     categoriesToDelete.push(rootId);
@@ -57,7 +56,7 @@ class Category extends Component {
 
     this.categoryFormDialog.show({
       modalTitle: `Write title for new category!`,
-      onConfirm : addNestedCategory.bind(this, category.id)
+      onConfirm: addNestedCategory.bind(this, category.id)
     });
   };
 
@@ -66,8 +65,8 @@ class Category extends Component {
 
     this.categoryFormDialog.show({
       modalTitle: `Type new category title for selected category!`,
-      onConfirm : updateCategory.bind(this, category.id),
-      data      : { categoryTitle: category.title }
+      onConfirm: updateCategory.bind(this, category.id),
+      data: { categoryTitle: category.title }
     });
   };
 
@@ -76,17 +75,17 @@ class Category extends Component {
 
     changeTaskParent({
       currentCategoryId: activeCategoryId,
-      targetCategoryId : category.id,
-      id               : activeTask.id
+      targetCategoryId: category.id,
+      id: activeTask.id
     });
   };
 
   render() {
     const {
-            category,
-            activeTask,
-            toggleChildrenVisibility
-          } = this.props;
+      category,
+      activeTask,
+      toggleChildrenVisibility
+    } = this.props;
 
     return (
       <div>
@@ -97,12 +96,15 @@ class Category extends Component {
                      name="toggle-category"
                      onChange={toggleChildrenVisibility}/> : null}
             {!activeTask ?
-              <Link className="todo-category__link"
-                    to={{ pathname: `/category/${category.id}` }}
-                    activeClassName="is-active">{category.title}</Link> : <span>{category.title}</span> }
+              <NavLink
+                className="todo-category__link"
+                to={{ pathname: `/category/${category.id}` }}
+                activeClassName="is-active">{category.title}</NavLink> : <span>{category.title}</span>}
             {!activeTask &&
-            <button className="toto-category__btn-edit"
-                    onClick={this.onCategoryEdit}>
+            <button
+              className="toto-category__btn-edit"
+              onClick={this.onCategoryEdit}
+            >
               <span className="icon-edit"/>
             </button>
             }
@@ -122,7 +124,7 @@ class Category extends Component {
               activeTask.categoryId !== category.id ?
                 <button className="toto-category__btn-move"
                         onClick={this.onChangeTaskParent}>
-                  <span className="icon-reply"/></button> : null }
+                  <span className="icon-reply"/></button> : null}
           </div>
         </div>
         <ConfirmationModal ref={el => this.confirmationDialog = el}/>
@@ -135,21 +137,25 @@ class Category extends Component {
 }
 
 Category.propTypes = {
-  category                : PropTypes.object.isRequired,
+  category: PropTypes.object.isRequired,
   toggleChildrenVisibility: PropTypes.func.isRequired,
-  activeTask              : PropTypes.object,
-  parentCategory          : PropTypes.object,
-  activeCategoryId        : PropTypes.string
+  updateCategory: PropTypes.func.isRequired,
+  addNestedCategory: PropTypes.func.isRequired,
+  changeTaskParent: PropTypes.func.isRequired,
+  getCategory: PropTypes.func.isRequired,
+  deleteCategory: PropTypes.func.isRequired,
+  activeTask: PropTypes.object,
+  parentCategory: PropTypes.object,
+  activeCategoryId: PropTypes.string
 };
 
-const mapDispatchToProps = ({
-  deleteCategory,
-  addNestedCategory,
-  updateCategory,
-  changeTaskParent,
-});
 
 export default connect(
-  () => ({}),
-  mapDispatchToProps
+  null,
+  {
+    deleteCategory,
+    addNestedCategory,
+    updateCategory,
+    changeTaskParent,
+  }
 )(Category);

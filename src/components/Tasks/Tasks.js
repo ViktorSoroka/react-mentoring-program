@@ -1,12 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Task from '../Task/Task';
+import { updateTaskCompletion } from '../../actions/TodoActions';
 
 import './Tasks.css';
-
-import { connect } from 'react-redux';
-
-import { updateTaskCompletion } from '../../actions/TodoActions';
 
 
 function Tasks({ tasks, updateTaskCompletion }) {
@@ -29,9 +28,13 @@ function Tasks({ tasks, updateTaskCompletion }) {
   return (
     <div className="todo-tasks">
       {tasks.map(task => {
-        return <Task key={task.id}
-                        task={task}
-                        onCompletedChange={updateTaskCompletion}/>
+        return (
+          <Task
+            key={task.id}
+            task={task}
+            onCompletedChange={updateTaskCompletion}
+          />
+        );
       })}
     </div>
   );
@@ -39,16 +42,13 @@ function Tasks({ tasks, updateTaskCompletion }) {
 
 Tasks.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.shape({
-    id   : PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired
-  }))
-};
-
-const mapDispatchToProps = {
-  updateTaskCompletion
+  })),
+  updateTaskCompletion: PropTypes.func.isRequired
 };
 
 export default connect(
-  () => ({}),
-  mapDispatchToProps
+  null,
+  { updateTaskCompletion }
 )(Tasks);

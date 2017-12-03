@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { ActionCreators as UndoActionCreators } from 'redux-undo';
 import { connect } from 'react-redux';
 
-let UndoRedo = ({ canUndo, canRedo, onUndo, onRedo }) => (
+
+const UndoRedo = ({ canUndo, canRedo, onUndo, onRedo }) => (
   <p>
     <button onClick={onUndo} disabled={!canUndo}>
       Undo
@@ -14,7 +16,14 @@ let UndoRedo = ({ canUndo, canRedo, onUndo, onRedo }) => (
   </p>
 );
 
-const mapStateToProps = (state) => ({
+UndoRedo.propTypes = {
+  canUndo: PropTypes.bool.isRequired,
+  canRedo: PropTypes.bool.isRequired,
+  onUndo: PropTypes.func.isRequired,
+  onRedo: PropTypes.func.isRequired
+};
+
+const mapStateToProps = () => ({
   canUndo: true,
   canRedo: true
 });
@@ -24,9 +33,7 @@ const mapDispatchToProps = ({
   onRedo: UndoActionCreators.redo
 });
 
-UndoRedo = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(UndoRedo);
-
-export default UndoRedo;

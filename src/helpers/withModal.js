@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 
 export default WrappedComponent => {
-  return class extends Component {
+  return class HOC extends Component {
     constructor(props) {
       super(props);
       this.state = { isVisible: false, modalTitle: '' };
@@ -11,13 +11,13 @@ export default WrappedComponent => {
     onConfirmClicked = (args) => {
       this.onConfirm && this.onConfirm(args);
       this.onConfirm = null;
-      this.data      = null;
+      this.data = null;
       this.hide();
     };
 
     show = ({ modalTitle, onConfirm, data }) => {
       this.onConfirm = onConfirm;
-      this.data      = data;
+      this.data = data;
       this.setState({ isVisible: true, modalTitle });
     };
 
@@ -32,9 +32,9 @@ export default WrappedComponent => {
         ...this.props,
         modalTitle,
         isVisible,
-        data     : this.data,
+        data: this.data,
         onConfirm: this.onConfirmClicked,
-        onCancel : this.hide
+        onCancel: this.hide
       };
 
       return (
@@ -42,4 +42,4 @@ export default WrappedComponent => {
       );
     }
   };
-}
+};

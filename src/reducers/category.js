@@ -2,16 +2,16 @@ import TodoActionTypes from '../constants/TodoActionTypes';
 
 
 const {
-        ADD_CATEGORY,
-        UPDATE_CATEGORY,
-      } = TodoActionTypes;
+  ADD_CATEGORY,
+  UPDATE_CATEGORY,
+} = TodoActionTypes;
 
 function createCategory({ id, title, parentId = null }) {
   return {
     id,
     title,
     parentId,
-    tasks        : [],
+    tasks: [],
     subcategories: []
   };
 }

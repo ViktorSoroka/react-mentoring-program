@@ -1,11 +1,12 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import './CategoryForm.css';
 
 
 export default class CategoryForm extends Component {
   state = {
-    invalid      : false,
+    invalid: false,
     categoryTitle: (this.props.data && this.props.data.categoryTitle) || ''
   };
 
@@ -38,10 +39,11 @@ export default class CategoryForm extends Component {
                  autoFocus
                  value={categoryTitle}
                  onChange={this.onCategoryTitleChange}/>
-          {invalid ? <span className="category-form__error-msg">Please enter valid category title.</span> : null }
+          {invalid ? <span className="category-form__error-msg">Please enter valid category title.</span> : null}
           <div className="category-form-btn-wrap">
             <button className="category-form-btn"
-                    type="sumbit">Submit</button>
+                    type="sumbit">Submit
+            </button>
             {this.props.modalForm ?
               <button className="category-form-btn"
                       type="button"
@@ -54,7 +56,9 @@ export default class CategoryForm extends Component {
 }
 
 CategoryForm.propTypes = {
-  modalForm   : PropTypes.bool,
-  onConfirm   : PropTypes.func,
-  onFormSubmit: PropTypes.func
+  modalForm: PropTypes.bool,
+  onConfirm: PropTypes.func,
+  onFormSubmit: PropTypes.func,
+  onCancel: PropTypes.func,
+  data: PropTypes.object
 };

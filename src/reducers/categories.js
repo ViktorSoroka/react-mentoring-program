@@ -1,16 +1,16 @@
 import TodoActionTypes from '../constants/TodoActionTypes';
-import category        from './category';
-import undoable        from 'redux-undo'
+import category from './category';
+import undoable from 'redux-undo';
 
 
 const {
-        ADD_CATEGORY,
-        UPDATE_CATEGORY,
-        DELETE_CATEGORY,
-        ADD_NESTED_CATEGORY,
-        ADD_TASK,
-        CHANGE_SUBTASK_PARENT
-      } = TodoActionTypes;
+  ADD_CATEGORY,
+  UPDATE_CATEGORY,
+  DELETE_CATEGORY,
+  ADD_NESTED_CATEGORY,
+  ADD_TASK,
+  CHANGE_SUBTASK_PARENT
+} = TodoActionTypes;
 
 const categories = (state = {}, action) => {
   switch (action.type) {
@@ -31,12 +31,12 @@ const categories = (state = {}, action) => {
 
       return {
         ...state,
-        [payload.id]      : category(undefined, {
-          type   : ADD_CATEGORY,
+        [payload.id]: category(undefined, {
+          type: ADD_CATEGORY,
           payload: action.payload
         }),
         [payload.parentId]: category(parentCategory, {
-          type   : UPDATE_CATEGORY,
+          type: UPDATE_CATEGORY,
           payload: {
             subcategories: [...parentCategory.subcategories, payload.id]
           }
@@ -49,8 +49,8 @@ const categories = (state = {}, action) => {
 
       const { id, categoriesToDelete } = action.payload;
 
-      const category       = state[id];
-      const parentCategory = state[category.parentId];
+      const currentCategory = state[id];
+      const parentCategory = state[currentCategory.parentId];
 
       Object.keys(state).forEach(key => {
         if (!categoriesToDelete.includes(key)) {
@@ -60,7 +60,7 @@ const categories = (state = {}, action) => {
 
       if (parentCategory) {
         newState[parentCategory.id] = category(parentCategory, {
-          type   : UPDATE_CATEGORY,
+          type: UPDATE_CATEGORY,
           payload: {
             subcategories: parentCategory.subcategories
               .filter(categoryId => categoryId !== id)
@@ -79,7 +79,7 @@ const categories = (state = {}, action) => {
       return {
         ...state,
         [targetCategory.id]: category(targetCategory, {
-          type   : UPDATE_CATEGORY,
+          type: UPDATE_CATEGORY,
           payload: {
             tasks: [payload.id, ...targetCategory.tasks]
           }
@@ -91,23 +91,23 @@ const categories = (state = {}, action) => {
       const { currentCategoryId, targetCategoryId, id } = action.payload;
 
       const currentCategory = state[currentCategoryId];
-      const targetCategory  = state[targetCategoryId];
+      const targetCategory = state[targetCategoryId];
 
       return {
         ...state,
-        [targetCategoryId] : category(targetCategory, {
-          type   : UPDATE_CATEGORY,
+        [targetCategoryId]: category(targetCategory, {
+          type: UPDATE_CATEGORY,
           payload: {
             tasks: [id, ...targetCategory.tasks]
           }
         }),
         [currentCategoryId]: category(currentCategory, {
-          type   : UPDATE_CATEGORY,
+          type: UPDATE_CATEGORY,
           payload: {
             tasks: currentCategory.tasks.filter(taskId => taskId !== id)
           }
         })
-      }
+      };
     }
 
     default:

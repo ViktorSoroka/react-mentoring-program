@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import './Page.css';
 
@@ -15,10 +16,10 @@ export default function Page({ header, asideContent, mainContent }) {
       </div>
     </div>
   );
-};
+}
 
 Page.propTypes = {
-  header      : PropTypes.node.isRequired,
+  header: PropTypes.node.isRequired,
   asideContent: PropTypes.node.isRequired,
-  mainContent : PropTypes.node.isRequired
+  mainContent: PropTypes.node.isRequired
 };

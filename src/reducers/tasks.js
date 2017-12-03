@@ -1,15 +1,15 @@
 import TodoActionTypes from '../constants/TodoActionTypes';
-import task            from './task';
-import undoable        from 'redux-undo';
+import task from './task';
+import undoable from 'redux-undo';
 
 
 const {
-        ADD_TASK,
-        UPDATE_TASK,
-        UPDATE_TASK_COMPLETION,
-        CHANGE_SUBTASK_PARENT,
-        DELETE_CATEGORY
-      } = TodoActionTypes;
+  ADD_TASK,
+  UPDATE_TASK,
+  UPDATE_TASK_COMPLETION,
+  CHANGE_SUBTASK_PARENT,
+  DELETE_CATEGORY
+} = TodoActionTypes;
 
 
 const tasks = (state = {}, action) => {

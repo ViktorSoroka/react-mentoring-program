@@ -1,22 +1,22 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import Page          from '../../components/Page/Page';
-import Header        from '../../components/Header/Header';
-import EditTaskForm  from '../../components/EditTaskForm/EditTaskForm';
+import Page from '../../components/Page/Page';
+import Header from '../../components/Header/Header';
+import EditTaskForm from '../../components/EditTaskForm/EditTaskForm';
 import CategoryTrees from '../../components/CategoryTrees/CategoryTrees';
 
 import { updateTask } from '../../actions/TodoActions';
 
-import { connect } from 'react-redux';
-
 
 class TodoItem extends Component {
   componentDidMount() {
-    this.checkActiveTaskPresence(this.props.params.id, this.props.router);
+    this.checkActiveTaskPresence();
   }
 
   componentWillUpdate() {
-    this.checkActiveTaskPresence(this.props.params.id, this.props.router);
+    this.checkActiveTaskPresence();
   }
 
   getTask(id) {
@@ -27,24 +27,29 @@ class TodoItem extends Component {
     return this.props.categories[categoryId];
   };
 
-  checkActiveTaskPresence(activeTaskId, router) {
-    if (activeTaskId && !this.getTask(activeTaskId)) {
-      return router.replace('/');
+  checkActiveTaskPresence() {
+    const { history, match: { params: { id } } } = this.props;
+    if (id && !this.getTask(id)) {
+      return history.push('/');
     }
   }
 
   render() {
-    const { categories, updateTask } = this.props;
+    const { categories, updateTask, match } = this.props;
 
-    const activeTaskId = this.props.params.id;
-    const activeTask   = this.getTask(activeTaskId) || {};
+    const activeTaskId = match.params.id;
+    const activeTask = this.getTask(activeTaskId) || {};
 
     const header = <Header title={activeTask ? activeTask.title : null}/>;
 
-    let asideContent = <CategoryTrees categories={categories}
-                                      activeCategoryId={activeTask.categoryId}
-                                      activeTask={activeTask}
-                                      getCategory={this.getCategory}/>;
+    let asideContent = (
+      <CategoryTrees
+        categories={categories}
+        activeCategoryId={activeTask.categoryId}
+        activeTask={activeTask}
+        getCategory={this.getCategory}
+      />
+    );
 
     const mainContent = activeTask ? <EditTaskForm task={activeTask} onFormSubmit={updateTask}/> : null;
 
@@ -53,12 +58,16 @@ class TodoItem extends Component {
 }
 
 TodoItem.propTypes = {
-  params: PropTypes.object.isRequired
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  updateTask: PropTypes.func.isRequired,
+  categories: PropTypes.object.isRequired,
+  tasks: PropTypes.object.isRequired
 };
 
 export default connect(state => ({
     categories: state.categories.present,
-    tasks     : state.tasks.present
+    tasks: state.tasks.present
   }),
   {
     updateTask
