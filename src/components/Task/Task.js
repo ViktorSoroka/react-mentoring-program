@@ -41,7 +41,8 @@ export default class Task extends Component {
 Task.propTypes = {
   task: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    isCompleted: PropTypes.string.isRequired
   }),
   onCompletedChange: PropTypes.func.isRequired,
 };
